@@ -1,0 +1,61 @@
+/**
+ * Theme Name: Exterior Door
+ * Description: Twenty Twenty Four child theme for InventoryPresser.com
+ * Author: Corey Salzano
+ * Author URI: https://github.com/csalzano
+ * Theme URI: https://github.com/fridaysystems/exteriordoor
+ * Template: twentytwentyfour
+ */
+
+/* Slant top below header on home page */
+#wp--skip-link--target::before{
+	content: "";
+	width: 0;
+	height: 0;
+	left: 0;
+	bottom: 290px;
+	position: relative;
+	border-style: solid;
+	border-width: 0 0 250px 100vw;
+	border-color: transparent transparent var(--wp--preset--color--base) transparent;
+	z-index: 2;
+}
+
+/* Slants for FAQ section on home page */
+.group-faq::before{
+	content: "";
+	width: 0;
+	height: 0;
+	left: -120px;
+	bottom: 270px;
+	position: relative;
+	border-style: solid;
+	border-width: 0 0 250px 101vw;
+	border-color: transparent transparent #142F73 transparent;
+	z-index: 2;
+}
+@media (max-width:1480px){
+	.group-faq::before{
+		left: -65px;
+		bottom: 172px;	
+		border-width: 0 0 150px 100vw;
+	}
+}
+  @media (max-width:480px){
+	.group-faq::before{
+		left: -36px;
+		border-width: 0 0 150px 105vw;
+	}
+}
+.group-faq::after{
+  content: "";
+	width: 0;
+	height: 0;
+	left: -120px;
+	bottom: 245px;
+	position: relative;
+	border-style: solid;
+	border-width: 0 0 250px 101vw;
+	border-color: transparent transparent #F9F9F9 transparent;
+	z-index: 2;
+}
