@@ -113,17 +113,21 @@ footer::before{
 
 /* Easy Digital Downloads */
 /* Purchase History page purchases table */
-#edd_user_history{
+.edd-table{
 	border-collapse: collapse;
 	width: 100%;
 }
-#edd_user_history th{
+.edd-table th{
 	text-align: left;
 	padding: .5em
 }
-#edd_user_history td{
+.edd-table td{
 	border: 1px solid #e0e0e0;
 	padding: .5em
+}
+.edd-table#edd_sl_license_keys,
+form#edd_sl_license_add_site_form{
+	margin-bottom: 15em;
 }
 
 form#edd_profile_editor_form legend{
@@ -145,7 +149,8 @@ form#edd_profile_editor_form fieldset#edd_profile_submit_fieldset{
 	text-align: right;
 }
 /* Style EDD buttons like the theme does */
-#edd_profile_editor_submit{
+#edd_profile_editor_submit,
+#edd_sl_license_add_site_form .button-primary{
 	background: linear-gradient(135deg,rgb(4,144,225) 0%,rgb(69,205,247) 100%);
 	color: var(--wp--preset--color--base-2);
 	font-family: var(--wp--preset--font-family--system-sans-serif);
@@ -163,4 +168,4 @@ form#edd_profile_editor_form fieldset#edd_profile_submit_fieldset{
 	padding-bottom: 0.5rem;
 	padding-left: var(--wp--preset--spacing--20);
 	font-size: var(--wp--preset--font-size--medium);
-  }
+}
