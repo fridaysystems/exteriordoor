@@ -1167,18 +1167,6 @@ function get_source_file_link( $post_id = null, $line_number = true ) {
 	return esc_url( $url );
 }
 
-/**
- * Compare two objects by name for sorting.
- *
- * @param WP_Post $a Post A
- * @param WP_Post $b Post B
- *
- * @return int
- */
-function compare_objects_by_name( $a, $b ) {
-	return strcmp( $a->post_name, $b->post_name );
-}
-
 function show_usage_info() {
 	$p2p_enabled = function_exists( 'p2p_register_connection_type' );
 

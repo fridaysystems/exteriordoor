@@ -64,7 +64,7 @@ namespace Devhub{
 	/**
 	 * User-submitted content (comments, notes, etc).
 	 */
-	//require __DIR__ . '/inc/user-content.php';
+	require __DIR__ . '/inc/user-content.php';
 
 	/**
 	 * User-submitted content preview.
@@ -183,6 +183,30 @@ namespace Devhub{
 		add_filter( 'breadcrumb_trail_items', __NAMESPACE__ . '\\breadcrumb_trail_items_for_handbook_root', 10, 2 );
 
 		add_filter( 'syntaxhighlighter_htmlresult', __NAMESPACE__ . '\\syntaxhighlighter_htmlresult' );
+
+		// Return the same block template for the wp-parser post types.
+		add_filter( 'template_include', __NAMESPACE__ . '\\wporg_docs_provide_template' );
+
+		add_filter( 'body_class', __NAMESPACE__ . '\\wporg_docs_body_class' );
+	}
+	/**
+	 * Adds the CSS class 'single-wp-parser' to singles in post types created by
+	 * wp-parser.
+	 *
+	 * @param string[] $classes   An array of body class names.
+	 */
+	function wporg_docs_body_class( $classes ) {
+		if ( is_singular( get_parsed_post_types() ) ) {
+			$classes[] = 'single-wp-parser';
+		}
+		return $classes;
+	}
+
+	function wporg_docs_provide_template( $template ) {
+		if ( is_singular( get_parsed_post_types() ) ) {
+			return locate_block_template( 'single-wp-parser-function', 'single-wp-parser-function', array( 'single-wp-parser-function' ) );
+		}
+		return $template;
 	}
 
 	/**
@@ -500,5 +524,17 @@ namespace Devhub{
 		}
 
 		return $open;
+	}
+
+	/**
+	 * Compare two objects by name for sorting.
+	 *
+	 * @param WP_Post $a Post A
+	 * @param WP_Post $b Post B
+	 *
+	 * @return int
+	 */
+	function compare_objects_by_name( $a, $b ) {
+		return strcmp( $a->post_name, $b->post_name );
 	}
 }

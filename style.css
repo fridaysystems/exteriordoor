@@ -141,30 +141,42 @@ footer::before{
 }
 
 /* Tables */
-.wp-block-table table{
-	background-color: var(--wp--preset--color--base-2);
+.wp-block-table table,
+table#uses-table,
+table#used-by-table,
+.edd-table {
+	background: none;
 }
 .wp-block-table td,
-.wp-block-table th{
+table#uses-table td,
+table#used-by-table td,
+.edd-table td {
+	background-color: var(--wp--preset--color--base-2);
 	border-color: var(--wp--preset--color--accent);
 }
 
 /* Easy Digital Downloads */
 /* Purchase History page purchases table */
-.edd-table{
+.edd-table,
+table#uses-table,
+table#used-by-table {
 	border-collapse: collapse;
 	width: 100%;
 }
-.edd-table th{
+.edd-table th,
+table#uses-table th,
+table#used-by-table th {
 	text-align: left;
 	padding: .5em
 }
-.edd-table td{
+.edd-table td,
+table#uses-table td,
+table#used-by-table td {
 	border: 1px solid #e0e0e0;
 	padding: .5em
 }
 .edd-table#edd_sl_license_keys,
-form#edd_sl_license_add_site_form{
+form#edd_sl_license_add_site_form,{
 	margin-bottom: 15em;
 }
 

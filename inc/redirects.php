@@ -23,7 +23,6 @@ class DevHub_Redirects {
 	public static function do_init() {
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_single_search_match' ) );
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_handbook' ) );
-		add_action( 'template_redirect', array( __CLASS__, 'redirect_singularized_handbooks' ), 1 );
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_pluralized_reference_post_types' ), 1 );
 		add_action( 'template_redirect', array( __CLASS__, 'paginated_home_page_404' ) );
 	}
@@ -51,28 +50,6 @@ class DevHub_Redirects {
 			( 'handbook' == get_query_var( 'name' ) && ! get_query_var( 'post_type' ) )
 		) {
 			wp_redirect( home_url() );
-			exit();
-		}
-	}
-
-	/**
-	 * Redirects requests for the singularized form of handbook slugs to the
-	 * pluralized version.
-	 */
-	public static function redirect_singularized_handbooks() {
-		$path = trailingslashit( $_SERVER['REQUEST_URI'] );
-
-		// '/plugin' => '/plugins'
-		if ( 0 === strpos( $path, '/plugin/' ) ) {
-			$path = get_post_type_archive_link( 'plugin-handbook' ) . substr( $path, 8 );
-			wp_redirect( $path, 301 );
-			exit();
-		}
-
-		// '/theme' => '/themes'
-		if ( 0 === strpos( $path, '/theme/' ) ) {
-			$path = get_post_type_archive_link( 'theme-handbook' ) . substr( $path, 7 );
-			wp_redirect( $path, 301 );
 			exit();
 		}
 	}

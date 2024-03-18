@@ -425,7 +425,7 @@ class DevHub_Formatting {
 								// Reference to a function.
 							} else {
 								// Only link actually parsed functions.
-								$post = get_posts(
+								$posts = get_posts(
 									array(
 										'post_title' => $matches[1],
 										'post_type'  => 'wp-parser-function',

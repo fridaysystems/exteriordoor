@@ -74,10 +74,6 @@ if ( show_usage_info() ) :
 		<?php endif; ?>
 
 		<?php if ( $has_used_by ) : ?>
-			<?php
-			if ( $has_uses && $uses->post_count > $uses_to_show ) :
-				?>
-				<hr /><?php endif; ?>
 
 			<article class="used-by">
 				<h3><?php esc_html_e( 'Used By', 'wporg' ); ?></h3>
