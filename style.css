@@ -7,13 +7,23 @@
  * Template: twentytwentyfour
  */
 
+h2.wp-block-heading,
+h3.wp-block-heading{
+   margin-block-start: 1.75em;
+}
+
+/* Bug fix, see https://wordpress.org/support/topic/wp-6-2-gutenberg-ul-has-background-sometimes-appears-and-sometimes-doesnt/ */
+ol.has-background, ul.has-background {
+    padding: 0 !important;
+}  
+
 /* Slant top below header on home page, .page-id-6576 */
 body.home main::before{
 	content: "";
 	width: 0;
 	height: 0;
 	left: 0;
-	bottom: 290px;
+	bottom: 272px;
 	position: relative;
 	border-style: solid;
 	border-width: 0 0 250px 100vw;
@@ -22,10 +32,24 @@ body.home main::before{
 }
 @media (max-width:800px){
 	body.home main::before{
-		bottom: 93px;	
+		bottom: 72px;	
 		border-width: 0 0 50px 100vw;
 	}
 }
+/* Make sure the header doesn't fall behind the main::before slant */
+.wp-block-cover.home-header{
+	z-index: 3;
+}
+span.wp-block-cover__background.has-base-2-background-color{
+	background-color: unset !important;
+}
+.home .entry-content{
+	background: #fff;
+}
+.home main{
+	background: var(--wp--preset--color--base);
+	margin-block-start: 0;
+}  
 
 /* Slants for FAQ section on home page */
 /* Slant FAQ top */
@@ -110,6 +134,20 @@ footer::before{
 		padding-top: 3em;
 	}
 }
+/* Last spacer on home page */
+.wp-block-spacer.last-spacer{
+	margin-block-start: 0;
+	background-color: var(--wp--preset--color--base);
+}
+
+/* Tables */
+.wp-block-table table{
+	background-color: var(--wp--preset--color--base-2);
+}
+.wp-block-table td,
+.wp-block-table th{
+  	border-color: var(--wp--preset--color--accent);
+}
 
 /* Easy Digital Downloads */
 /* Purchase History page purchases table */
@@ -148,10 +186,48 @@ form#edd_profile_editor_form fieldset#edd_profile_submit_fieldset{
 #edd_profile_submit_wrap{
 	text-align: right;
 }
-/* Style EDD buttons like the theme does */
+/* Order line items */
+#edd_checkout_cart tfoot th{
+	text-align: left;
+}
+#edd_checkout_cart tfoot th span{
+	float: right;
+}
+/* Remove needless outlines around button containers */
+#edd_purchase_submit,
+#edd_checkout_form_wrap fieldset#edd_sl_renewal_fields,
+#edd_discount_code {
+  border: none;
+}
+/* Don't stack the order line items and subtotals so tightly */
+tr.edd_cart_item,
+#edd-save-cart-button{
+  line-height: 5em;
+}
+.edd_cart_footer_row{
+  line-height: 2em;
+}
+/* Hide visa mastercard etc logos */
+.edd-payment-icons{
+  display: none;
+}
+/* Don't show a big checkmark after adding something to the cart */
+.edd-cart-added-alert .edd-icon-check {
+	display: none;
+}
+/* Style EDD & GF buttons like the theme does */
+:root {
+	--gradient-color-1: rgb(4,144,225);
+	--gradient-color-2: rgb(69,205,247);
+	--gradient-color-1-hover: rgb(4, 225, 194);
+}
+.edd-add-to-cart.button,
+#edd-purchase-button.button,
+button#edd_sl_show_renewal_form,
 #edd_profile_editor_submit,
-#edd_sl_license_add_site_form .button-primary{
-	background: linear-gradient(135deg,rgb(4,144,225) 0%,rgb(69,205,247) 100%);
+#edd_sl_license_add_site_form .button-primary,
+.gform_button.button{
+	background: linear-gradient(135deg,var(--gradient-color-1) 0%,var(--gradient-color-2) 100%);
 	color: var(--wp--preset--color--base-2);
 	font-family: var(--wp--preset--font-family--system-sans-serif);
 	border-radius: 35px;
@@ -168,4 +244,107 @@ form#edd_profile_editor_form fieldset#edd_profile_submit_fieldset{
 	padding-bottom: 0.5rem;
 	padding-left: var(--wp--preset--spacing--20);
 	font-size: var(--wp--preset--font-size--medium);
+}
+/* Hover button gradients */
+.edd-add-to-cart.button:hover,
+#edd-purchase-button.button:hover,
+a.edd_cart_remove_item_btn:hover,
+button#edd_sl_show_renewal_form:hover,
+a#edd-save-cart-button:hover,
+#edd_profile_editor_submit:hover,
+#edd_sl_license_add_site_form .button-primary:hover,
+.gform_button.button:hover,
+a.edd_go_to_checkout:hover {
+	--gradient-color-1: var(--gradient-color-1-hover);
+}
+/* Hover button gradients for most buttons and the search block */
+.wp-block-button__link:hover,
+.wp-block-search__button:hover{
+	background: linear-gradient(135deg,var(--gradient-color-1-hover) 0%,var(--gradient-color-2) 100%);
+}
+a.edd_go_to_checkout,
+a.edd_cart_remove_item_btn,
+a#edd-save-cart-button {
+	background: linear-gradient(135deg,var(--gradient-color-1) 0%,var(--gradient-color-2) 100%);
+	color: var(--wp--preset--color--base-2);
+	font-family: var(--wp--preset--font-family--system-sans-serif);
+	border-radius: 35px;
+	padding-top: 0.5rem;
+	padding-right: var(--wp--preset--spacing--20);
+	padding-bottom: 0.5rem;
+	padding-left: var(--wp--preset--spacing--20);
+	text-decoration: none;
+	font-weight: normal;
+}
+
+/* wAppointment */
+.wbtn-secondary.wbtn:not(.wbtn-disabled),
+.wbtn-primary.wbtn:not(.wbtn-disabled){
+	background: linear-gradient(135deg,var(--gradient-color-1) 0%,var(--gradient-color-2) 100%) !important;
+	color: var(--wp--preset--color--base-2) !important;
+	font-family: var(--wp--preset--font-family--system-sans-serif);
+	border-radius: 35px !important;
+	border-top-style: none;
+	border-top-width: 0px;
+	border-right-style: none;
+	border-right-width: 0px;
+	border-bottom-style: none;
+	border-bottom-width: 0px;
+	border-left-style: none;
+	border-left-width: 0px;
+	padding-top: 0.5rem;
+	padding-right: var(--wp--preset--spacing--20);
+	padding-bottom: 0.5rem;
+	padding-left: var(--wp--preset--spacing--20);
+	font-size: var(--wp--preset--font-size--medium) !important;
+}
+.wbtn-secondary.wbtn:not(.wbtn-disabled):hover,
+.wbtn-primary.wbtn:not(.wbtn-disabled):hover{
+	--gradient-color-1: var(--gradient-color-1-hover);
+}
+.wap-head,
+.step-BookingCalendar .appointment-summary{
+	display: none !important;
+}
+.wap-front .wap-form-body{
+	max-height: none !important;
+	margin-top: 0 !important;
+}
+.wap-front .has-scroll .wap-form-body{
+	overflow-x: visible !important;
+	overflow-y: visible !important;
+}
+.wap-bf.show{
+	box-shadow: none !important;
+}
+.wap-front .wrap-calendar.step-BookingCalendar .slotsPane{
+	overflow-y: visible !important;
+	max-height: none !important;
+}
+.large-version .wap-wid,
+.wap-wid{
+	max-width: none !important;
+}
+.wap-front .slotsPane,
+.wap-front .wbtn.wbtn-secondary{
+	box-shadow: none !important;
+}
+/* wAppointment */
+
+/* EDD pricing options radio buttons lists near Add to Cart buttons */
+.edd_download_purchase_form .edd_price_options ul {
+	list-style: none;
+}
+.edd_download_purchase_form  .edd_price_options li {
+	line-height: 200%;
+}
+
+/* Plugins page packages/bundles section */
+.group-full-width .edd_purchase_submit_wrapper{
+	text-align: center;
+}
+
+/* Full width stripe more list item spacing */
+.group-full-width ul li {
+	line-height: 2em;
 }
