@@ -46,9 +46,21 @@ function change_source_url_base( $url_base, $post_id ) {
 }
 add_filter( 'wp-parser_source_url_base', 'change_source_url_base', 10, 2 );
 
+add_filter( 'pre_get_posts', 'invp_change_archive_per_page' );
+function invp_change_archive_per_page( $wp_query ) {
+	if ( ! in_array( $wp_query->query_vars['post_type'], \DevHub\get_parsed_post_types(), true ) ) {
+		return $wp_query;
+	}
+	$wp_query->query_vars['posts_per_page'] = 100;
+	return $wp_query;
+}
+
+
 /**
  * wordpress.org developer docs features
  */
 require_once 'wporg-docs.php';
-require_once 'shortcode-reference.php';
+require_once 'shortcode-wporg-post-type-or-taxonomy-description.php';
+require_once 'shortcode-wporg-file.php';
+require_once 'shortcode-wporg-reference.php';
 require_once 'shortcode-breadcrumb-trail.php';

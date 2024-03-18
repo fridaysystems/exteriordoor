@@ -48,6 +48,7 @@ class DevHub_Registrations {
 		register_post_type(
 			'wp-parser-function',
 			array(
+				'description'  => __( 'Reusable procedures with unique names that can accept data as input in arguments.', 'wporg' ),
 				'has_archive'  => 'docs/reference/functions',
 				'label'        => __( 'Functions', 'wporg' ),
 				'labels'       => array(
@@ -85,6 +86,7 @@ class DevHub_Registrations {
 		register_post_type(
 			'wp-parser-class',
 			array(
+				'description'  => __( 'PHP classes are blueprints of known properties and behaviors belonging to project pieces.', 'wporg' ),
 				'has_archive'  => 'docs/reference/classes',
 				'label'        => __( 'Classes', 'wporg' ),
 				'labels'       => array(
@@ -118,6 +120,7 @@ class DevHub_Registrations {
 		register_post_type(
 			'wp-parser-hook',
 			array(
+				'description'  => __( 'Filter and action hooks allow other developers to change the way the plugin operates.', 'wporg' ),
 				'has_archive'  => 'docs/reference/hooks',
 				'label'        => __( 'Hooks', 'wporg' ),
 				'labels'       => array(
@@ -151,6 +154,7 @@ class DevHub_Registrations {
 		register_post_type(
 			'wp-parser-method',
 			array(
+				'description'  => __( 'Methods are functions scoped to a class.', 'wporg' ),
 				'has_archive'  => 'docs/reference/methods',
 				'label'        => __( 'Methods', 'wporg' ),
 				'labels'       => array(

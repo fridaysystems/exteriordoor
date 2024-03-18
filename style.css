@@ -6,6 +6,9 @@
  * Theme URI: https://github.com/fridaysystems/exteriordoor
  * Template: twentytwentyfour
  */
+main :where(body .is-layout-flex) {
+	gap: 0;
+}
 
 h2.wp-block-heading,
 h3.wp-block-heading{
@@ -155,8 +158,8 @@ table#used-by-table td,
 	border-color: var(--wp--preset--color--accent);
 }
 
-/* Easy Digital Downloads */
-/* Purchase History page purchases table */
+/* wp-parser related uses tables */
+/* EDD Purchase History page purchases table */
 .edd-table,
 table#uses-table,
 table#used-by-table {

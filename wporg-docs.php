@@ -84,7 +84,7 @@ namespace Devhub{
 	/**
 	 * CLI commands custom post type and importer.
 	 */
-	require __DIR__ . '/inc/cli.php';
+	//require __DIR__ . '/inc/cli.php';
 
 	/**
 	 * Docs importer.
@@ -141,9 +141,9 @@ namespace Devhub{
 	/**
 	 * CLI commands.
 	 */
-	if ( defined( 'WP_CLI' ) && WP_CLI ) {
-		require __DIR__ . '/inc/cli-commands.php';
-	}
+	// if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	// 	require __DIR__ . '/inc/cli-commands.php';
+	// }
 
 	/**
 	 * Admin area customizations.
@@ -184,9 +184,12 @@ namespace Devhub{
 
 		add_filter( 'syntaxhighlighter_htmlresult', __NAMESPACE__ . '\\syntaxhighlighter_htmlresult' );
 
-		// Return the same block template for the wp-parser post types.
+		/**
+		 * Use the same single & archive block templates for all four wp-parser
+		 * post types.
+		 */
 		add_filter( 'template_include', __NAMESPACE__ . '\\wporg_docs_provide_template' );
-
+		// Add a body tag class to simplify our CSS rules for four post types.
 		add_filter( 'body_class', __NAMESPACE__ . '\\wporg_docs_body_class' );
 	}
 	/**
@@ -203,8 +206,12 @@ namespace Devhub{
 	}
 
 	function wporg_docs_provide_template( $template ) {
-		if ( is_singular( get_parsed_post_types() ) ) {
+		$post_types = get_parsed_post_types();
+		if ( is_singular( $post_types ) ) {
 			return locate_block_template( 'single-wp-parser-function', 'single-wp-parser-function', array( 'single-wp-parser-function' ) );
+		}
+		if ( is_post_type_archive( $post_types ) || is_tax( 'wp-parser-source-file' ) ) {
+			return locate_block_template( 'archive-wp-parser-function', 'archive-wp-parser-function', array( 'archive-wp-parser-function' ) );
 		}
 		return $template;
 	}

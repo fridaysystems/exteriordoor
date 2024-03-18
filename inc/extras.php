@@ -87,10 +87,15 @@ function wporg_filter_archive_title( $title, $post = null ) {
 	if ( ! is_admin() && $post && ( ! is_single() || doing_filter( 'single_post_title' ) ) && in_array( get_post_type( $post ), array( 'wp-parser-function', 'wp-parser-method' ) ) ) {
 		$title .= '()';
 	}
+	if ( is_main_query() && ( is_post_type_archive( \DevHub\get_parsed_post_types() ) || is_tax( 'wp-parser-source-file' ) ) ) {
+		$title = str_replace( 'Archives: ', '', $title );
+	}
 
 	return $title;
 }
+
 add_filter( 'the_title', 'wporg_filter_archive_title', 10, 2 );
+add_filter( 'get_the_archive_title_prefix', '__return_empty_string' ); // Removes "Archives: ".
 add_filter( 'single_post_title', 'wporg_filter_archive_title', 10, 2 );
 
 /**
