@@ -33,11 +33,7 @@ if ( ! empty( $source_file ) ) {
 				<pre class="brush: php; toolbar: false; first-line: <?php echo esc_attr( get_post_meta( get_the_ID(), '_wp-parser_line_num', true ) ); ?>"><?php echo htmlentities( get_source_code( get_the_ID(), true ) ); ?></pre>
 			</div>
 			<p class="source-code-links">
-				<span>
-					<a href="#source" class="show-complete-source"><?php _e( 'Expand full source code', 'wporg' ); ?></a>
-					<a href="#source" class="less-complete-source"><?php _e( 'Collapse full source code', 'wporg' ); ?></a>
-				</span>
-				<span><a href="<?php echo get_source_file_link(); ?>"><?php echo $view_on_trac_link_text; ?></a></span>
+				<span><a href="#source" class="show-complete-source"><?php _e( 'Expand full source code', 'wporg' ); ?></a><a href="#source" class="less-complete-source"><?php _e( 'Collapse full source code', 'wporg' ); ?></a></span><span><a href="<?php echo get_source_file_link(); ?>"><?php echo $view_on_trac_link_text; ?></a></span>
 			</p>
 		<?php else : ?>
 			<p>

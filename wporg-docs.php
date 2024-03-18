@@ -64,22 +64,22 @@ namespace Devhub{
 	/**
 	 * User-submitted content (comments, notes, etc).
 	 */
-	require __DIR__ . '/inc/user-content.php';
+	//require __DIR__ . '/inc/user-content.php';
 
 	/**
 	 * User-submitted content preview.
 	 */
-	require __DIR__ . '/inc/user-content-preview.php';
+	//require __DIR__ . '/inc/user-content-preview.php';
 
 	/**
 	 * Voting for user-submitted content.
 	 */
-	require __DIR__ . '/inc/user-content-voting.php';
+	//require __DIR__ . '/inc/user-content-voting.php';
 
 	/**
 	 * Editing for user-submitted content.
 	 */
-	require __DIR__ . '/inc/user-content-edit.php';
+	//require __DIR__ . '/inc/user-content-edit.php';
 
 	/**
 	 * CLI commands custom post type and importer.
@@ -126,7 +126,7 @@ namespace Devhub{
 	/**
 	 * Autocomplete.
 	 */
-	require __DIR__ . '/inc/autocomplete.php';
+	//require __DIR__ . '/inc/autocomplete.php';
 
 	/**
 	 * Search query.
@@ -370,7 +370,12 @@ namespace Devhub{
 		$min = defined( 'WP_DEBUG' ) && WP_DEBUG ? '' : '.min';
 		// wp_enqueue_style( 'dashicons' );
 		// wp_enqueue_style( 'wporg-developer-style', get_stylesheet_uri(), array(), '3' );
-		wp_enqueue_style( 'wp-dev-sass-compiled', get_stylesheet_directory_uri() . "/wporg-docs{$min}.css", array( 'wporg-developer-style' ), '20200713' );
+		wp_enqueue_style(
+			'wp-dev-sass-compiled',
+			get_stylesheet_directory_uri() . "/wporg-docs{$min}.css",
+			array(),
+			wp_get_theme()->get( 'Version' )
+		);
 		wp_enqueue_script( 'wporg-developer-navigation', get_stylesheet_directory_uri() . '/js/navigation.js', array(), '20181209', true );
 		wp_enqueue_script( 'wporg-developer-skip-link-focus-fix', get_stylesheet_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20130115', true );
 		wp_enqueue_script( 'wporg-developer-search', get_stylesheet_directory_uri() . '/js/search.js', array(), '20150430', true );
