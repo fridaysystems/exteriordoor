@@ -17,8 +17,6 @@ if ( ! $description && ! $see_tags ) {
 }
 
 ?>
-
-<hr />
 <section class="description">
 	<h2><?php _e( 'Description', 'wporg' ); ?></h2>
 	<?php echo $description; ?>

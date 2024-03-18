@@ -1,5 +1,4 @@
 <?php
-// namespace DevHub;
 
 add_action(
 	'init',
@@ -7,11 +6,20 @@ add_action(
 		add_shortcode( 'wporg_reference', 'wporg_reference_shortcode_content' );
 	}
 );
+
+add_filter( 'the_content', 'wporg_reference_content' );
+function wporg_reference_content( $content ) {
+	if ( ! in_array( get_post_type(), \DevHub\get_parsed_post_types(), true ) ) {
+		return $content;
+	}
+	remove_filter( 'the_content', 'wporg_reference_content' );
+	return apply_shortcodes( '[wporg_reference]' );
+}
 /**
  * wporg_reference_shortcode_content
  *
- * @param  mixed $atts
- * @return void
+ * @param  array $atts
+ * @return string
  */
 function wporg_reference_shortcode_content( $atts ) {
 	$html = get_deprecated()
@@ -24,9 +32,9 @@ function wporg_reference_shortcode_content( $atts ) {
 		// If the Handbook TOC is available, use it.
 		if ( class_exists( 'WPorg_Handbook_TOC' ) ) {
 			$toc     = new \WPorg_Handbook_TOC(
-				get_parsed_post_types(),
+				\DevHub\get_parsed_post_types(),
 				array(
-					'header_text' => __( 'Contents', 'wporg' ),
+					'header_text' => __( 'On This Page', 'wporg' ),
 				)
 			);
 			$content = '<div class="content-toc">' . $toc->add_toc( $content ) . '</div>';

@@ -51,3 +51,4 @@ add_filter( 'wp-parser_source_url_base', 'change_source_url_base', 10, 2 );
  */
 require_once 'wporg-docs.php';
 require_once 'shortcode-reference.php';
+require_once 'shortcode-breadcrumb-trail.php';
