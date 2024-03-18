@@ -32,16 +32,16 @@ class DevHub_User_Content_Edit {
 		self::update_comment();
 
 		// Add edit_user_note query var for editing.
-		add_filter( 'query_vars',                      array( __CLASS__, 'comment_query_var' ) );
+		add_filter( 'query_vars', array( __CLASS__, 'comment_query_var' ) );
 
 		// Redirect to home page if the edit request is invalid.
-		add_action( 'template_redirect',               array( __CLASS__, 'redirect_invalid_edit_request' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'redirect_invalid_edit_request' ) );
 
 		// Include the comment edit template.
-		add_filter( 'template_include',                array( __CLASS__, 'template_include' ) );
+		add_filter( 'template_include', array( __CLASS__, 'template_include' ) );
 
 		// Set the post_type and post id for use in the comment edit template.
-		add_action( 'pre_get_posts',                   array( __CLASS__, 'pre_get_posts' ) );
+		add_action( 'pre_get_posts', array( __CLASS__, 'pre_get_posts' ) );
 	}
 
 	/**
@@ -72,7 +72,7 @@ class DevHub_User_Content_Edit {
 			'comment_ID',
 			'comment',
 			'comment_parent',
-			'comment_post_ID'
+			'comment_post_ID',
 		);
 
 		foreach ( $defaults as $value ) {
@@ -86,7 +86,10 @@ class DevHub_User_Content_Edit {
 		if ( ! $comment ) {
 			// Bail and provide a way back to the edit form if a comment is empty.
 			$msg  = __( '<strong>ERROR</strong>: please type a comment.', 'wporg' );
-			$args = array( 'response' => 200, 'back_link' => true );
+			$args = array(
+				'response'  => 200,
+				'back_link' => true,
+			);
 			wp_die( '<p>' . $msg . '</p>', __( 'Comment Submission Failure', 'wporg' ), $args );
 		}
 
@@ -99,12 +102,12 @@ class DevHub_User_Content_Edit {
 
 		if ( $nonce && $can_user_edit ) {
 			$comment_data['comment_content'] = $comment;
-			$updated = wp_update_comment( $comment_data );
+			$updated                         = wp_update_comment( $comment_data );
 		}
 
 		$location = get_permalink( $post_id );
 		if ( $location ) {
-			$query = $updated ? '?updated-note=' . $comment_id : '';
+			$query  = $updated ? '?updated-note=' . $comment_id : '';
 			$query .= '#comment-' . $comment_id;
 			wp_safe_redirect( $location . $query );
 			exit;
@@ -149,7 +152,7 @@ class DevHub_User_Content_Edit {
 			return $template;
 		}
 
-		$comment_template = get_query_template( "comments-edit" );
+		$comment_template = get_query_template( 'comments-edit' );
 		if ( $comment_template ) {
 			$template = $comment_template;
 		}
@@ -176,7 +179,7 @@ class DevHub_User_Content_Edit {
 			$comment = get_comment( $comment_id );
 			if ( isset( $comment->comment_post_ID ) ) {
 				$query->is_singular = true;
-				$query->is_single = true;
+				$query->is_single   = true;
 				$query->set( 'post_type', get_post_type( $comment->comment_post_ID ) );
 				$query->set( 'p', $comment->comment_post_ID );
 
@@ -187,8 +190,6 @@ class DevHub_User_Content_Edit {
 		// Set 404 if a user can't edit a note.
 		$query->set_404();
 	}
-
 } // DevHub_User_Content_Edit
 
 DevHub_User_Content_Edit::init();
-

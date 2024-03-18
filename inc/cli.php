@@ -2,10 +2,10 @@
 
 class DevHub_CLI {
 
-	private static $commands_manifest = 'https://raw.githubusercontent.com/wp-cli/handbook/master/bin/commands-manifest.json';
-	private static $meta_key = 'wporg_cli_markdown_source';
+	private static $commands_manifest    = 'https://raw.githubusercontent.com/wp-cli/handbook/master/bin/commands-manifest.json';
+	private static $meta_key             = 'wporg_cli_markdown_source';
 	private static $supported_post_types = array( 'command' );
-	private static $posts_per_page = -1;
+	private static $posts_per_page       = -1;
 	private static $non_bundled_commands = array(
 		'https://github.com/wp-cli/admin-command',
 		'https://github.com/wp-cli/dist-archive-command',
@@ -46,34 +46,37 @@ class DevHub_CLI {
 			// Needed for manual inspection/modification of the post's parent.
 			'page-attributes',
 		);
-		register_post_type( 'command', array(
-			'has_archive' => 'cli/commands',
-			'label'       => __( 'WP-CLI Commands', 'wporg' ),
-			'labels'      => array(
-				'name'               => __( 'WP-CLI Commands', 'wporg' ),
-				'singular_name'      => __( 'Command', 'wporg' ),
-				'all_items'          => __( 'Commands', 'wporg' ),
-				'new_item'           => __( 'New Command', 'wporg' ),
-				'add_new'            => __( 'Add New', 'wporg' ),
-				'add_new_item'       => __( 'Add New Command', 'wporg' ),
-				'edit_item'          => __( 'Edit Command', 'wporg' ),
-				'view_item'          => __( 'View Command', 'wporg' ),
-				'search_items'       => __( 'Search Commands', 'wporg' ),
-				'not_found'          => __( 'No Commands found', 'wporg' ),
-				'not_found_in_trash' => __( 'No Commands found in trash', 'wporg' ),
-				'parent_item_colon'  => __( 'Parent Command', 'wporg' ),
-				'menu_name'          => __( 'Commands', 'wporg' ),
-			),
-			'menu_icon'   => 'dashicons-arrow-right-alt2',
-			'public'      => true,
-			'hierarchical'=> true,
-			'rewrite'     => array(
-				'feeds'      => false,
-				'slug'       => 'cli/commands',
-				'with_front' => false,
-			),
-			'supports'    => $supports,
-		) );
+		register_post_type(
+			'command',
+			array(
+				'has_archive'  => 'cli/commands',
+				'label'        => __( 'WP-CLI Commands', 'wporg' ),
+				'labels'       => array(
+					'name'               => __( 'WP-CLI Commands', 'wporg' ),
+					'singular_name'      => __( 'Command', 'wporg' ),
+					'all_items'          => __( 'Commands', 'wporg' ),
+					'new_item'           => __( 'New Command', 'wporg' ),
+					'add_new'            => __( 'Add New', 'wporg' ),
+					'add_new_item'       => __( 'Add New Command', 'wporg' ),
+					'edit_item'          => __( 'Edit Command', 'wporg' ),
+					'view_item'          => __( 'View Command', 'wporg' ),
+					'search_items'       => __( 'Search Commands', 'wporg' ),
+					'not_found'          => __( 'No Commands found', 'wporg' ),
+					'not_found_in_trash' => __( 'No Commands found in trash', 'wporg' ),
+					'parent_item_colon'  => __( 'Parent Command', 'wporg' ),
+					'menu_name'          => __( 'Commands', 'wporg' ),
+				),
+				'menu_icon'    => 'dashicons-arrow-right-alt2',
+				'public'       => true,
+				'hierarchical' => true,
+				'rewrite'      => array(
+					'feeds'      => false,
+					'slug'       => 'cli/commands',
+					'with_front' => false,
+				),
+				'supports'     => $supports,
+			)
+		);
 	}
 
 	public static function action_pre_get_posts( $query ) {
@@ -94,24 +97,27 @@ class DevHub_CLI {
 		}
 		$manifest = json_decode( wp_remote_retrieve_body( $response ), true );
 		if ( ! $manifest ) {
-			return new WP_Error( 'invalid-manifest', 'Manifest did not unfurl properly.' );;
+			return new WP_Error( 'invalid-manifest', 'Manifest did not unfurl properly.' );
+
 		}
 		// Fetch all handbook posts for comparison
-		$q = new WP_Query( array(
-			'post_type'      => self::$supported_post_types,
-			'post_status'    => 'publish',
-			'posts_per_page' => self::$posts_per_page,
-		) );
+		$q        = new WP_Query(
+			array(
+				'post_type'      => self::$supported_post_types,
+				'post_status'    => 'publish',
+				'posts_per_page' => self::$posts_per_page,
+			)
+		);
 		$existing = array();
-		foreach( $q->posts as $post ) {
-			$cmd_path = self::get_cmd_path( $post->ID );
+		foreach ( $q->posts as $post ) {
+			$cmd_path              = self::get_cmd_path( $post->ID );
 			$existing[ $cmd_path ] = array(
-				'post_id'   => $post->ID,
-				'cmd_path'  => $cmd_path,
+				'post_id'  => $post->ID,
+				'cmd_path' => $cmd_path,
 			);
 		}
 		$created = 0;
-		foreach( $manifest as $doc ) {
+		foreach ( $manifest as $doc ) {
 			// Already exists
 			$existing_doc = wp_filter_object_list( $existing, array( 'cmd_path' => $doc['cmd_path'] ) );
 			if ( $existing_doc ) {
@@ -122,7 +128,7 @@ class DevHub_CLI {
 				continue;
 			}
 			if ( self::process_manifest_doc( $doc, $existing, $manifest ) ) {
-				$created++;
+				++$created;
 			}
 		}
 		if ( class_exists( 'WP_CLI' ) ) {
@@ -142,7 +148,7 @@ class DevHub_CLI {
 				$parents = wp_filter_object_list( $existing, array( 'cmd_path' => $doc['parent'] ) );
 			}
 			if ( ! empty( $parents ) ) {
-				$parent = array_shift( $parents );
+				$parent      = array_shift( $parents );
 				$post_parent = $parent['post_id'];
 			}
 		}
@@ -153,8 +159,8 @@ class DevHub_CLI {
 				update_post_meta( $post->ID, 'repo_url', esc_url_raw( $doc['repo_url'] ) );
 			}
 			$existing[ $cmd_path ] = array(
-				'post_id'   => $post->ID,
-				'cmd_path'  => $cmd_path,
+				'post_id'  => $post->ID,
+				'cmd_path' => $cmd_path,
 			);
 			return true;
 		}
@@ -162,22 +168,24 @@ class DevHub_CLI {
 	}
 
 	public static function action_devhub_cli_markdown_import() {
-		$q = new WP_Query( array(
-			'post_type'      => self::$supported_post_types,
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-			'posts_per_page' => self::$posts_per_page,
-		) );
-		$ids = $q->posts;
+		$q       = new WP_Query(
+			array(
+				'post_type'      => self::$supported_post_types,
+				'post_status'    => 'publish',
+				'fields'         => 'ids',
+				'posts_per_page' => self::$posts_per_page,
+			)
+		);
+		$ids     = $q->posts;
 		$success = 0;
-		foreach( $ids as $id ) {
+		foreach ( $ids as $id ) {
 			$ret = self::update_post_from_markdown_source( $id );
 			if ( class_exists( 'WP_CLI' ) ) {
 				if ( is_wp_error( $ret ) ) {
 					\WP_CLI::warning( $ret->get_error_message() );
 				} else {
 					\WP_CLI::log( "Updated {$id} from markdown source" );
-					$success++;
+					++$success;
 				}
 			}
 		}
@@ -198,7 +206,7 @@ class DevHub_CLI {
 			'post_title'  => sanitize_text_field( wp_slash( $doc['title'] ) ),
 			'post_name'   => sanitize_title_with_dashes( $doc['slug'] ),
 		);
-		$post_id = wp_insert_post( $post_data );
+		$post_id   = wp_insert_post( $post_data );
 		if ( ! $post_id ) {
 			return false;
 		}
@@ -224,7 +232,7 @@ class DevHub_CLI {
 		// Transform GitHub repo HTML pages into their raw equivalents
 		$markdown_source = preg_replace( '#https?://github\.com/([^/]+/[^/]+)/blob/(.+)#', 'https://raw.githubusercontent.com/$1/$2', $markdown_source );
 		$markdown_source = add_query_arg( 'v', time(), $markdown_source );
-		$response = wp_remote_get( $markdown_source );
+		$response        = wp_remote_get( $markdown_source );
 		if ( is_wp_error( $response ) ) {
 			return $response;
 		} elseif ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
@@ -237,7 +245,7 @@ class DevHub_CLI {
 
 		$title = null;
 		if ( preg_match( '/^#\s(.+)/', $markdown, $matches ) ) {
-			$title = $matches[1];
+			$title    = $matches[1];
 			$markdown = preg_replace( '/^#\swp\s(.+)/', '', $markdown );
 		}
 		$markdown = trim( $markdown );
@@ -245,14 +253,14 @@ class DevHub_CLI {
 		// Steal the first sentence as the excerpt
 		$excerpt = '';
 		if ( preg_match( '/^(.+)/', $markdown, $matches ) ) {
-			$excerpt = $matches[1];
+			$excerpt  = $matches[1];
 			$markdown = preg_replace( '/^(.+)/', '', $markdown );
 		}
 
 		// Transform to HTML and save the post
 		jetpack_require_lib( 'markdown' );
-		$parser = new \WPCom_GHF_Markdown_Parser;
-		$html = $parser->transform( $markdown );
+		$parser    = new \WPCom_GHF_Markdown_Parser();
+		$html      = $parser->transform( $markdown );
 		$post_data = array(
 			'ID'           => $post_id,
 			'post_content' => wp_filter_post_kses( wp_slash( $html ) ),
@@ -288,11 +296,11 @@ class DevHub_CLI {
 		$content = get_queried_object()->post_content;
 		$content = self::prepend_installation( $content );
 		$content = self::append_subcommands( $content );
-		$items = self::get_tags( 'h([1-4])', $content );
+		$items   = self::get_tags( 'h([1-4])', $content );
 		if ( count( $items ) > 1 ) {
 			$quick_links = '<span class="quick-links">(';
-			foreach( $items as $item ) {
-				$quick_links .= '<a href="#' . sanitize_title_with_dashes( $item[3] )  . '">' . strtolower( $item[3] ) . '</a>|';
+			foreach ( $items as $item ) {
+				$quick_links .= '<a href="#' . sanitize_title_with_dashes( $item[3] ) . '">' . strtolower( $item[3] ) . '</a>|';
 			}
 			$quick_links = rtrim( $quick_links, '|' ) . ')</span>';
 			$breadcrumbs = str_replace( '</div>', $quick_links . '</div>', $breadcrumbs );
@@ -319,23 +327,26 @@ class DevHub_CLI {
 		$content = self::prepend_installation( $content );
 		$content = self::append_subcommands( $content );
 
-		$repo_url = get_post_meta( get_the_ID(), 'repo_url', true );
-		$cmd_slug = str_replace( 'wp ', '', get_the_title() );
-		$open_issues = 'https://github.com/issues?q=label%3A' . urlencode( 'command:' . str_replace( ' ', '-', $cmd_slug ) ) . '+sort%3Aupdated-desc+org%3Awp-cli+is%3Aopen';
+		$repo_url      = get_post_meta( get_the_ID(), 'repo_url', true );
+		$cmd_slug      = str_replace( 'wp ', '', get_the_title() );
+		$open_issues   = 'https://github.com/issues?q=label%3A' . urlencode( 'command:' . str_replace( ' ', '-', $cmd_slug ) ) . '+sort%3Aupdated-desc+org%3Awp-cli+is%3Aopen';
 		$closed_issues = 'https://github.com/issues?q=label%3A' . urlencode( 'command:' . str_replace( ' ', '-', $cmd_slug ) ) . '+sort%3Aupdated-desc+org%3Awp-cli+is%3Aclosed';
-		$issue_count = array( 'open' => false, 'closed' => false );
-		foreach( $issue_count as $type => $value ) {
+		$issue_count   = array(
+			'open'   => false,
+			'closed' => false,
+		);
+		foreach ( $issue_count as $type => $value ) {
 			$cache_key = 'wpcli_issue_count_' . md5( $cmd_slug . $type );
-			$value = get_transient( $cache_key );
+			$value     = get_transient( $cache_key );
 			if ( false === $value ) {
 				$request_url = 'https://api.github.com/search/issues?q=' . rawurlencode( 'label:command:' . str_replace( ' ', '-', $cmd_slug ) . ' org:wp-cli state:' . $type );
-				$response = wp_remote_get( $request_url );
-				$ttl = 2 * MINUTE_IN_SECONDS;
+				$response    = wp_remote_get( $request_url );
+				$ttl         = 2 * MINUTE_IN_SECONDS;
 				if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 					$data = json_decode( wp_remote_retrieve_body( $response ), true );
 					if ( isset( $data['total_count'] ) ) {
 						$value = $data['total_count'];
-						$ttl = 2 * HOUR_IN_SECONDS;
+						$ttl   = 2 * HOUR_IN_SECONDS;
 					}
 				}
 				set_transient( $cache_key, $value, $ttl );
@@ -349,15 +360,23 @@ class DevHub_CLI {
 				<a href="<?php echo esc_url( $repo_url ); ?>"><img src="https://make.wordpress.org/cli/wp-content/plugins/wporg-cli/assets/images/github-mark.svg" class="icon-github" /></a>
 			<?php endif; ?>
 			<div class="btn-group">
-				<a href="<?php echo esc_url( $open_issues ); ?>" class="button">View Open Issues<?php if ( false !== $issue_count['open'] ) { ?> <span class="green">(<?php echo (int) $issue_count['open']; ?>)</span><?php } ?></a>
-				<a href="<?php echo esc_url( $closed_issues ); ?>" class="button">View Closed Issues<?php if ( false !== $issue_count['closed'] ) { ?> <span class="red">(<?php echo (int) $issue_count['closed']; ?>)</span><?php } ?></a>
+				<a href="<?php echo esc_url( $open_issues ); ?>" class="button">View Open Issues
+									<?php
+									if ( false !== $issue_count['open'] ) {
+										?>
+					<span class="green">(<?php echo (int) $issue_count['open']; ?>)</span><?php } ?></a>
+				<a href="<?php echo esc_url( $closed_issues ); ?>" class="button">View Closed Issues
+									<?php
+									if ( false !== $issue_count['closed'] ) {
+										?>
+					<span class="red">(<?php echo (int) $issue_count['closed']; ?>)</span><?php } ?></a>
 			</div>
 			<?php if ( $repo_url ) : ?>
 				<a href="<?php echo esc_url( rtrim( $repo_url, '/' ) . '/issues/new' ); ?>" class="button">Create New Issue</a>
 			<?php endif; ?>
 		</div>
 		<?php
-		$issues = ob_get_clean();
+		$issues  = ob_get_clean();
 		$content = $issues . PHP_EOL . PHP_EOL . $content;
 
 		// Include the excerpt in the main content well
@@ -388,7 +407,8 @@ class DevHub_CLI {
 			return $content;
 		}
 		$repo_slug = str_replace( 'https://github.com/', '', $repo_url );
-		ob_start(); ?>
+		ob_start();
+		?>
 		<h3>INSTALLING</h3>
 
 		<p>Use the <code><?php the_title(); ?></code> command by installing the command's package:</p>
@@ -410,13 +430,15 @@ class DevHub_CLI {
 	}
 
 	protected static function append_subcommands( $content ) {
-		$children = get_children( array(
-			'post_parent'    => get_the_ID(),
-			'post_type'      => 'command',
-			'posts_per_page' => 250,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		) );
+		$children = get_children(
+			array(
+				'post_parent'    => get_the_ID(),
+				'post_type'      => 'command',
+				'posts_per_page' => 250,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			)
+		);
 		// Append subcommands if they exist
 		if ( $children ) {
 			ob_start();
@@ -430,7 +452,7 @@ class DevHub_CLI {
 				</tr>
 				</thead>
 				<tbody>
-					<?php foreach( $children as $child ) : ?>
+					<?php foreach ( $children as $child ) : ?>
 						<tr>
 							<td><a href="<?php echo apply_filters( 'the_permalink', get_permalink( $child->ID ) ); ?>"><?php echo apply_filters( 'the_title', $child->post_title ); ?></a></td>
 							<td><?php echo apply_filters( 'the_excerpt', $child->post_excerpt ); ?></td>
@@ -438,23 +460,23 @@ class DevHub_CLI {
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-		<?php
+			<?php
 			$subcommands = ob_get_clean();
-			$content .= PHP_EOL . $subcommands;
+			$content    .= PHP_EOL . $subcommands;
 		}
 		return $content;
 	}
 
 	protected static function add_ids_and_jumpto_links( $tag, $content ) {
-		$items = self::get_tags( $tag, $content );
-		$first = true;
-		$matches = array();
+		$items        = self::get_tags( $tag, $content );
+		$first        = true;
+		$matches      = array();
 		$replacements = array();
 
 		foreach ( $items as $item ) {
 			$replacement = '';
-			$matches[] = $item[0];
-			$id = sanitize_title_with_dashes($item[2]);
+			$matches[]   = $item[0];
+			$id          = sanitize_title_with_dashes( $item[2] );
 
 			if ( ! $first ) {
 				$replacement .= '<p class="toc-jump"><a href="#top">' . __( 'Top &uarr;', 'wporg' ) . '</a></p>';
@@ -493,12 +515,12 @@ class DevHub_CLI {
 	 * @return string Normalized command path.
 	 */
 	private static function get_cmd_path( $post_id ) {
-		$cmd_path = rtrim( str_replace( home_url( 'cli/commands/' ), '', get_permalink( $post_id ) ), '/' );
-		$parts = explode( '/', $cmd_path );
+		$cmd_path      = rtrim( str_replace( home_url( 'cli/commands/' ), '', get_permalink( $post_id ) ), '/' );
+		$parts         = explode( '/', $cmd_path );
 		$cleaned_parts = array();
 		foreach ( $parts as $part ) {
 			$matches = null;
-			$result = preg_match( '/^(?<cmd>.*)(?<suffix>-[0-9]+)$/', $part, $matches );
+			$result  = preg_match( '/^(?<cmd>.*)(?<suffix>-[0-9]+)$/', $part, $matches );
 			if ( 1 === $result ) {
 				$part = $matches['cmd'];
 			}
@@ -506,7 +528,6 @@ class DevHub_CLI {
 		}
 		return implode( '/', $cleaned_parts );
 	}
-
 }
 
 DevHub_CLI::init();

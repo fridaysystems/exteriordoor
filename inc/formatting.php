@@ -61,7 +61,7 @@ class DevHub_Formatting {
 	}
 
 	/**
-	 * Allows for "Wordpress" just for the excerpt value of the capital_P_dangit function.
+	 * Allows for "WordPress" just for the excerpt value of the capital_P_dangit function.
 	 *
 	 * WordPress.org has a global output buffer that runs capital_P_dangit() over displayed
 	 * content. For this one field of this one post, circumvent that function to
@@ -72,7 +72,7 @@ class DevHub_Formatting {
 	 */
 	public static function lowercase_P_dangit_just_once( $excerpt ) {
 		if ( 'wp-parser-function' == get_post_type() && 'capital_P_dangit' == get_the_title() ) {
-			$excerpt = str_replace( 'Wordpress', 'Word&#112;ress', $excerpt );
+			$excerpt = str_replace( 'WordPress', 'Word&#112;ress', $excerpt );
 		}
 
 		return $excerpt;
@@ -140,7 +140,6 @@ class DevHub_Formatting {
 							$link .= ' ' . $parts[3];
 						}
 					}
-
 				}
 
 				// Link to an external resource.
@@ -155,7 +154,7 @@ class DevHub_Formatting {
 
 					// Link with linked text: {@link https://codex.wordpress.org/The_Loop Use new WordPress Loop}
 					else {
-						$url = $parts[0];
+						$url  = $parts[0];
 						$text = $parts[1];
 					}
 
@@ -186,9 +185,9 @@ class DevHub_Formatting {
 		$url = '';
 
 		// Exceptions for externally-linked elements.
-		$exceptions = [
+		$exceptions = array(
 			'error_log()' => 'https://secure.php.net/manual/en/function.error-log.php',
-		];
+		);
 
 		// Link exceptions that should actually point to external resources.
 		if ( ! empty( $exceptions[ $link ] ) ) {
@@ -203,25 +202,37 @@ class DevHub_Formatting {
 		// Link to class method: {@see WP_Query::query()}
 		elseif ( false !== strpos( $link, '::' ) ) {
 			$url = get_post_type_archive_link( 'wp-parser-class' ) .
-			        str_replace( array( '::', '()' ), array( '/', '' ), $link );
+					str_replace( array( '::', '()' ), array( '/', '' ), $link );
 		}
 
 		// Link to hook: {@see 'pre_get_search_form'}
 		elseif ( 1 === preg_match( '/^(?:\'|(?:&#8216;))([\$\w\-&;]+)(?:\'|(?:&#8217;))$/', $link, $hook ) ) {
 			if ( ! empty( $hook[1] ) ) {
 				$url = get_post_type_archive_link( 'wp-parser-hook' ) .
-				        sanitize_title_with_dashes( html_entity_decode( $hook[1] ) ) . '/';
+						sanitize_title_with_dashes( html_entity_decode( $hook[1] ) ) . '/';
 			}
 		}
 
 		// Link to class: {@see WP_Query}
 		elseif (
-			( in_array( $link, array(
-				'wpdb', 'wp_atom_server', 'wp_xmlrpc_server', // Exceptions that start with lowercase letter
-				'AtomFeed', 'AtomEntry', 'AtomParser', 'MagpieRSS', 'Requests', 'RSSCache', 'Translations', 'Walker' // Exceptions that lack an underscore
-			) ) )
+			( in_array(
+				$link,
+				array(
+					'wpdb',
+					'wp_atom_server',
+					'wp_xmlrpc_server', // Exceptions that start with lowercase letter
+					'AtomFeed',
+					'AtomEntry',
+					'AtomParser',
+					'MagpieRSS',
+					'Requests',
+					'RSSCache',
+					'Translations',
+					'Walker', // Exceptions that lack an underscore
+				)
+			) )
 			||
-			( 1 === preg_match ( '/^_?[A-Z][a-zA-Z]+_\w+/', $link ) ) // Otherwise, class names start with (optional underscore, then) uppercase and have underscore
+			( 1 === preg_match( '/^_?[A-Z][a-zA-Z]+_\w+/', $link ) ) // Otherwise, class names start with (optional underscore, then) uppercase and have underscore
 		) {
 			$url = get_post_type_archive_link( 'wp-parser-class' ) . sanitize_key( $link );
 		}
@@ -261,7 +272,7 @@ class DevHub_Formatting {
 
 		$attributes = '';
 		foreach ( $attrs as $name => $value ) {
-			$value = 'href' === $name ? esc_url( $value ) : esc_attr( $value );
+			$value       = 'href' === $name ? esc_url( $value ) : esc_attr( $value );
 			$attributes .= sprintf( ' %s="%s"', esc_attr( $name ), $value );
 		}
 
@@ -344,15 +355,16 @@ class DevHub_Formatting {
 			return $text;
 		}
 
-		$r = '';
-		$textarr = preg_split( '/(<[^<>]+>)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE ); // split out HTML tags
+		$r               = '';
+		$textarr         = preg_split( '/(<[^<>]+>)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE ); // split out HTML tags
 		$nested_code_pre = 0; // Keep track of how many levels link is nested inside <pre> or <code>
 		foreach ( $textarr as $piece ) {
 
-			if ( preg_match( '|^<code[\s>]|i', $piece ) || preg_match( '|^<pre[\s>]|i', $piece ) || preg_match( '|^<script[\s>]|i', $piece ) || preg_match( '|^<style[\s>]|i', $piece ) )
-				$nested_code_pre++;
-			elseif ( $nested_code_pre && ( '</code>' === strtolower( $piece ) || '</pre>' === strtolower( $piece ) || '</script>' === strtolower( $piece ) || '</style>' === strtolower( $piece ) ) )
-				$nested_code_pre--;
+			if ( preg_match( '|^<code[\s>]|i', $piece ) || preg_match( '|^<pre[\s>]|i', $piece ) || preg_match( '|^<script[\s>]|i', $piece ) || preg_match( '|^<style[\s>]|i', $piece ) ) {
+				++$nested_code_pre;
+			} elseif ( $nested_code_pre && ( '</code>' === strtolower( $piece ) || '</pre>' === strtolower( $piece ) || '</script>' === strtolower( $piece ) || '</style>' === strtolower( $piece ) ) ) {
+				--$nested_code_pre;
+			}
 
 			if ( $nested_code_pre || empty( $piece ) || ( $piece[0] === '<' && ! preg_match( '|^<\s*[\w]{1,20}+://|', $piece ) ) ) {
 				$r .= $piece;
@@ -410,7 +422,7 @@ class DevHub_Formatting {
 									);
 								}
 
-							// Reference to a function.
+								// Reference to a function.
 							} else {
 								// Only link actually parsed functions.
 								$post = get_posts(
@@ -441,7 +453,7 @@ class DevHub_Formatting {
 					// Most class names start with an uppercase letter and have an underscore.
 					// The exceptions are explicitly listed since future classes likely won't violate previous statement.
 					// Requests and Translations, due to their higher likelihood of use as a word and not as an inline class
-					//   reference, should be explicitly referenced, e.g. `{@see Requests}`.
+					// reference, should be explicitly referenced, e.g. `{@see Requests}`.
 					'~'
 						. '(?<!/)'
 						. '\b'                // Word boundary
@@ -484,14 +496,13 @@ class DevHub_Formatting {
 				// Maybelater: Detect references to hooks, Currently not deemed reliably possible.
 
 				$content = substr( $content, 1, -1 ); // Remove our whitespace padding.
-				$r .= $content;
+				$r      .= $content;
 
 			} // end else
-
 		} // end foreach
 
 		// Cleanup of accidental links within links
-		return preg_replace( '#(<a([ \r\n\t]+[^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i', "$1$3</a>", $r );
+		return preg_replace( '#(<a([ \r\n\t]+[^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i', '$1$3</a>', $r );
 	}
 
 	/**
@@ -509,22 +520,22 @@ class DevHub_Formatting {
 	 */
 	public static function convert_lists_to_markup( $text ) {
 		$inline_list = false;
-		$li = '<br /> * ';
+		$li          = '<br /> * ';
 
 		// Convert asterisks to a list.
 		// Example: https://developer.wordpress.org/reference/functions/add_menu_page/
-		if ( false !== strpos( $text, ' * ' ) )  {
+		if ( false !== strpos( $text, ' * ' ) ) {
 			// Display as simple plaintext list.
-			$text = str_replace( ' * ', "\n" . $li, $text );
+			$text        = str_replace( ' * ', "\n" . $li, $text );
 			$inline_list = true;
 		}
 
 		// Convert dashes to a list.
 		// Example: https://developer.wordpress.org/reference/classes/wp_term_query/__construct/
 		// Example: https://developer.wordpress.org/reference/hooks/password_change_email/
-		if ( false !== strpos( $text, ' - ' ) )  {
+		if ( false !== strpos( $text, ' - ' ) ) {
 			// Display as simple plaintext list.
-			$text = str_replace( ' - ', "\n" . $li, $text );
+			$text        = str_replace( ' - ', "\n" . $li, $text );
 			$inline_list = true;
 		}
 
@@ -533,11 +544,11 @@ class DevHub_Formatting {
 			// Replace first item, ensuring the opening 'ul' tag is prepended.
 			$text = preg_replace( '~^' . preg_quote( $li ) . '(.+)$~mU', "<ul><li>\$1</li>\n", $text, 1 );
 			// Wrap subsequent list items in 'li' tags.
-			$text = preg_replace( '~^' . preg_quote( $li ) . '(.+)$~mU', "<li>\$1</li>\n", $text ); 
+			$text = preg_replace( '~^' . preg_quote( $li ) . '(.+)$~mU', "<li>\$1</li>\n", $text );
 			$text = trim( $text );
 
 			// Close the list if it hasn't been closed before start of next hash parameter.
-			//$text = preg_replace( '~(</li>)(\s+</li>)~smU', '$1</ul>$2', $text );
+			// $text = preg_replace( '~(</li>)(\s+</li>)~smU', '$1</ul>$2', $text );
 			$text = preg_replace( '~(</li>)(\s*</li>)~smU', '$1</ul>$2', $text );
 
 			// Closethe list if it hasn't been closed and it's the end of the description.
@@ -573,11 +584,11 @@ class DevHub_Formatting {
 		$text     = str_replace( '@type', "\n@type", $text );
 
 		$in_list = false;
-		$parts = explode( "\n", $text );
+		$parts   = explode( "\n", $text );
 		foreach ( $parts as $part ) {
 			$part = preg_replace( '/\s+/', ' ', $part );
 			list( $wordtype, $type, $name, $description ) = explode( ' ', $part . '    ', 4 ); // extra spaces ensure we'll always have 4 items.
-			$description = trim( $description );
+			$description                                  = trim( $description );
 
 			$description = apply_filters( 'devhub-format-hash-param-description', $description );
 
@@ -585,7 +596,7 @@ class DevHub_Formatting {
 
 			// Handle nested hashes.
 			if ( ( $description && '{' === $description[0] ) || '{' === $name ) {
-				$description = ltrim( $description, '{' ) . '<ul class="param-hash">';
+				$description     = ltrim( $description, '{' ) . '<ul class="param-hash">';
 				$skip_closing_li = true;
 			} elseif ( '}' === substr( $description, -1 ) ) {
 				$description = substr( $description, 0, -1 ) . "</li></ul>\n";
@@ -593,7 +604,7 @@ class DevHub_Formatting {
 
 			if ( '@type' != $wordtype ) {
 				if ( $in_list ) {
-					$in_list = false;
+					$in_list   = false;
 					$new_text .= "</li></ul>\n";
 				}
 
@@ -603,7 +614,7 @@ class DevHub_Formatting {
 					$new_text .= '<li>';
 				} else {
 					$new_text .= '<ul class="param-hash"><li>';
-					$in_list = true;
+					$in_list   = true;
 				}
 
 				// Normalize argument name.
@@ -648,15 +659,15 @@ class DevHub_Formatting {
 	 */
 	public static function fix_param_description_parsedown_bug( $text ) {
 		$fixes = array(
-			'/`(.+)<code>/'        => '<code>$1</code>',
-			'/<\/code>(.+)`/'      => ' <code>$1</code>',
+			'/`(.+)<code>/'   => '<code>$1</code>',
+			'/<\/code>(.+)`/' => ' <code>$1</code>',
 		);
 
 		// Determine if code tags look inverted.
 		$first_start = strpos( $text, '<code>' );
-		$first_end = strpos( $text, '</code>' );
+		$first_end   = strpos( $text, '</code>' );
 		if ( false !== $first_start && false !== $first_end && $first_end < $first_start ) {
-			$fixes[ '~</code>(.+)<code>~U' ] = ' <code>$1</code>';
+			$fixes['~</code>(.+)<code>~U'] = ' <code>$1</code>';
 		}
 
 		$matched = true;
@@ -687,7 +698,6 @@ class DevHub_Formatting {
 
 		return $text;
 	}
-
 } // DevHub_Formatting
 
 DevHub_Formatting::init();

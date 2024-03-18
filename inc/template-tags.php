@@ -36,7 +36,7 @@ if ( ! function_exists( 'wporg_developer_paging_nav' ) ) :
 			</div>
 			<!-- .nav-links -->
 		</nav><!-- .navigation -->
-	<?php
+		<?php
 	}
 endif;
 
@@ -66,7 +66,7 @@ if ( ! function_exists( 'wporg_developer_post_nav' ) ) :
 			</div>
 			<!-- .nav-links -->
 		</nav><!-- .navigation -->
-	<?php
+		<?php
 	}
 endif;
 
@@ -80,7 +80,7 @@ if ( ! function_exists( 'wporg_developer_get_ordered_notes' ) ) :
 	 * Use `wporg_developer_list_notes()` to display the notes.
 	 *
 	 * @param integer $post_id Optional. Post id to get comments for
-	 * @param array $args Arguments used for get_comments().
+	 * @param array   $args Arguments used for get_comments().
 	 * @return array Array with comment objects
 	 */
 	function wporg_developer_get_ordered_notes( $post_id = 0, $args = array() ) {
@@ -111,15 +111,16 @@ if ( ! function_exists( 'wporg_developer_get_ordered_notes' ) ) :
 
 		// Check if the current page is a reply to a note.
 		$reply_id = 0;
-		if ( isset( $_GET['replytocom'] ) && $_GET['replytocom'] ) {		
-			/* Javascript uses preventDefault() when clicking links with '?replytocom={comment_ID}'
+		if ( isset( $_GET['replytocom'] ) && $_GET['replytocom'] ) {
+			/*
+			Javascript uses preventDefault() when clicking links with '?replytocom={comment_ID}'
 			 * We assume Javascript is disabled when visiting a page with this query var.
 			 * There are no consequences if Javascript is enabled.
 			 */
 			$reply_id = absint( $_GET['replytocom'] );
 		}
 
-		$order = $children = array();
+		$order  = $children = array();
 		$voting = class_exists( 'DevHub_User_Contributed_Notes_Voting' );
 
 		// Remove child notes and add the vote count order for parent notes.
@@ -145,12 +146,13 @@ if ( ! function_exists( 'wporg_developer_get_ordered_notes' ) ) :
 			}
 
 			if ( ! $show_editor && ( $reply_id && ( $reply_id === (int) $comment->comment_ID ) ) ) {
-				/* The query var 'replytocom' is used and the value is the same as the current comment ID.
+				/*
+				The query var 'replytocom' is used and the value is the same as the current comment ID.
 				 * We show the editor for the current comment because we assume Javascript is disabled.
 				 * If Javascript is not disabled the editor is hidden (as normal) by the class 'hide-if-js'.
 				 */
 				$comments[ $key ]->show_editor = true;
-				$show_editor = true;
+				$show_editor                   = true;
 			}
 		}
 
@@ -165,15 +167,15 @@ if ( ! function_exists( 'wporg_developer_list_notes' ) ) :
 	/**
 	 * List user contributed notes.
 	 *
-	 * @param array   $comments Array with comment objects.
-	 * @param array   $args Comment display arguments.
+	 * @param array $comments Array with comment objects.
+	 * @param array $args Comment display arguments.
 	 */
 	function wporg_developer_list_notes( $comments, $args ) {
 		$is_user_content    = class_exists( 'DevHub_User_Submitted_Content' );
 		$is_user_logged_in  = is_user_logged_in();
 		$can_user_post_note = DevHub\can_user_post_note( true, get_the_ID() );
 		$is_user_verified   = $is_user_logged_in && $can_user_post_note;
-	
+
 		$args['updated_note'] = 0;
 		if ( isset( $_GET['updated-note'] ) && $_GET['updated-note'] ) {
 			$args['updated_note'] = absint( $_GET['updated-note'] );
@@ -186,7 +188,8 @@ if ( ! function_exists( 'wporg_developer_list_notes' ) ) :
 			// Display parent comment.
 			wporg_developer_user_note( $comment, $args, 1 );
 
-			/* Use hide-if-js class to hide the feedback section if Javascript is enabled.
+			/*
+			Use hide-if-js class to hide the feedback section if Javascript is enabled.
 			 * Users can display the section with Javascript.
 			 */
 			echo "<section id='feedback-{$comment_id}' class='feedback hide-if-js'>\n";
@@ -204,7 +207,8 @@ if ( ! function_exists( 'wporg_developer_list_notes' ) ) :
 
 			// Add a feedback form for logged in users.
 			if ( $is_user_content && $is_user_verified ) {
-				/* Show the feedback editor if we're replying to a note and Javascript is disabled.
+				/*
+				Show the feedback editor if we're replying to a note and Javascript is disabled.
 				 * If Javascript is enabled the editor is hidden (as normal) by the 'hide-if-js' class.
 				 */
 				$display = $comment->show_editor ? 'show' : 'hide';
@@ -222,10 +226,11 @@ if ( ! function_exists( 'wporg_developer_list_notes' ) ) :
 					$feedback_text = __( 'Log in to add feedback', 'wporg' );
 					$feedback_link = 'https://login.wordpress.org/?redirect_to=' . urlencode( $feedback_link );
 				} else {
-					$class         ='add';
+					$class         = 'add';
 					$feedback_text = __( 'Add feedback to this note', 'wporg' );
 
-					/* Hide the feedback link if the current user is logged in and the
+					/*
+					Hide the feedback link if the current user is logged in and the
 					 * feedback editor is displayed (because Javascript is disabled).
 					 * If Javascript is enabled the editor is hidden and the feedback link is displayed (as normal).
 					 */
@@ -258,7 +263,7 @@ if ( ! function_exists( 'wporg_developer_user_note' ) ) :
 		$approved       = ( 0 < (int) $comment->comment_approved ) ? true : false;
 		$is_parent      = ( 0 === (int) $comment->comment_parent ) ? true : false;
 		$is_voting      = class_exists( 'DevHub_User_Contributed_Notes_Voting' );
-		$count          = $is_voting ? (int)  DevHub_User_Contributed_Notes_Voting::count_votes( $comment->comment_ID, 'difference' ) : 0;
+		$count          = $is_voting ? (int) DevHub_User_Contributed_Notes_Voting::count_votes( $comment->comment_ID, 'difference' ) : 0;
 		$curr_user_note = $is_voting ? (bool) DevHub_User_Contributed_Notes_Voting::is_current_user_note( $comment->comment_ID ) : false;
 		$edited_note_id = isset( $args['updated_note'] ) ? $args['updated_note'] : 0;
 		$is_edited_note = ( $edited_note_id === (int) $comment->comment_ID );
@@ -281,16 +286,19 @@ if ( ! function_exists( 'wporg_developer_user_note' ) ) :
 			$comment_class[] = 'user-note-moderated';
 		}
 
-		$date = sprintf( _x( '%1$s ago', '%1$s = human-readable time difference', 'wporg' ),
-			human_time_diff( get_comment_time( 'U' ),
-			current_time( 'timestamp' ) )
+		$date = sprintf(
+			_x( '%1$s ago', '%1$s = human-readable time difference', 'wporg' ),
+			human_time_diff(
+				get_comment_time( 'U' ),
+				current_time( 'timestamp' )
+			)
 		);
 		?>
-		<li id="comment-<?php comment_ID(); ?>" data-comment-id="<?php echo $comment->comment_ID;  ?>" <?php comment_class( implode( ' ', $comment_class ) ); ?>>
+		<li id="comment-<?php comment_ID(); ?>" data-comment-id="<?php echo $comment->comment_ID; ?>" <?php comment_class( implode( ' ', $comment_class ) ); ?>>
 		<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 
 		<?php if ( $is_parent ) : ?>
-			<a href="#comment-content-<?php echo $comment->comment_ID; ?>" class="screen-reader-text"><?php printf( __( 'Skip to note %d content', 'wporg' ), ++ $note_number ); ?></a>
+			<a href="#comment-content-<?php echo $comment->comment_ID; ?>" class="screen-reader-text"><?php printf( __( 'Skip to note %d content', 'wporg' ), ++$note_number ); ?></a>
 			<header class="comment-meta">
 
 			<?php
@@ -341,14 +349,14 @@ if ( ! function_exists( 'wporg_developer_user_note' ) ) :
 			if ( $is_parent ) {
 				comment_text();
 			} else {
-				$text = get_comment_text()  . ' &mdash; ';
+				$text  = get_comment_text() . ' &mdash; ';
 				$text .= sprintf( __( 'By %s', 'wporg' ), sprintf( '<cite class="fn">%s</cite>', $note_author ) ) . ' &mdash; ';
-				$text .= ' <a class="comment-date" href="'. esc_url( get_comment_link( $comment->comment_ID ) ) . '">';
+				$text .= ' <a class="comment-date" href="' . esc_url( get_comment_link( $comment->comment_ID ) ) . '">';
 				$text .= '<time datetime="' . get_comment_time( 'c' ) . '">' . $date . '</time></a>';
 
 				if ( $has_edit_cap ) {
 					// WP admin edit comment link.
-					$text .= ' &mdash; <a class="comment-edit-link" href="' . get_edit_comment_link( $comment->comment_ID ) .'">';
+					$text .= ' &mdash; <a class="comment-edit-link" href="' . get_edit_comment_link( $comment->comment_ID ) . '">';
 					$text .= __( 'Edit', 'wporg' ) . '</a>';
 				} elseif ( $can_edit_note ) {
 					// Front end edit comment link.
@@ -373,7 +381,7 @@ if ( ! function_exists( 'wporg_developer_user_note' ) ) :
 		</article>
 		</li>
 		<?php endif; ?>
-	<?php
+		<?php
 	}
 endif; // ends check for wporg_developer_user_note()
 
@@ -387,19 +395,23 @@ if ( ! function_exists( 'wporg_developer_posted_on' ) ) :
 			$time_string .= '<time class="updated" datetime="%3$s">%4$s</time>';
 		}
 
-		$time_string = sprintf( $time_string,
+		$time_string = sprintf(
+			$time_string,
 			esc_attr( get_the_date( 'c' ) ),
 			esc_html( get_the_date() ),
 			esc_attr( get_the_modified_date( 'c' ) ),
 			esc_html( get_the_modified_date() )
 		);
 
-		printf( __( '<span class="posted-on">Posted on %1$s</span><span class="byline"> by %2$s</span>', 'wporg' ),
-			sprintf( '<a href="%1$s" rel="bookmark">%2$s</a>',
+		printf(
+			__( '<span class="posted-on">Posted on %1$s</span><span class="byline"> by %2$s</span>', 'wporg' ),
+			sprintf(
+				'<a href="%1$s" rel="bookmark">%2$s</a>',
 				esc_url( get_permalink() ),
 				$time_string
 			),
-			sprintf( '<span class="author vcard"><a class="url fn n" href="%1$s">%2$s</a></span>',
+			sprintf(
+				'<span class="author vcard"><a class="url fn n" href="%1$s">%2$s</a></span>',
 				esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
 				esc_html( get_the_author() )
 			)
@@ -413,9 +425,11 @@ endif;
 function wporg_developer_categorized_blog() {
 	if ( false === ( $all_the_cool_cats = get_transient( 'all_the_cool_cats' ) ) ) {
 		// Create an array of all the categories that are attached to posts.
-		$all_the_cool_cats = get_categories( array(
-			'hide_empty' => 1,
-		) );
+		$all_the_cool_cats = get_categories(
+			array(
+				'hide_empty' => 1,
+			)
+		);
 
 		// Count the number of categories that are attached to the posts.
 		$all_the_cool_cats = count( $all_the_cool_cats );
@@ -461,9 +475,11 @@ function wp_doc_comment( $comment, $args, $depth ) {
 				echo get_avatar( $comment );
 
 				/* translators: 1: comment author, 2: date and time */
-				printf( __( 'Contributed by %1$s on %2$s', 'wporg' ),
+				printf(
+					__( 'Contributed by %1$s on %2$s', 'wporg' ),
 					sprintf( '<span class="fn">%s</span>', get_comment_author_link() ),
-					sprintf( '<a href="%1$s"><time datetime="%2$s">%3$s</time></a>',
+					sprintf(
+						'<a href="%1$s"><time datetime="%2$s">%3$s</time></a>',
 						esc_url( get_comment_link( $comment->comment_ID ) ),
 						get_comment_time( 'c' ),
 						/* translators: 1: date, 2: time */
@@ -481,7 +497,7 @@ function wp_doc_comment( $comment, $args, $depth ) {
 	</article>
 	<!-- #comment-## -->
 
-<?php
+	<?php
 }
 
 /**
@@ -551,11 +567,14 @@ function get_current_version_term( $ignore_minor = true ) {
 		$current_version = implode( '.', $version_parts );
 	}
 
-	$version = get_terms( 'wp-parser-since', array(
-		'number' => '1',
-		'order'  => 'DESC',
-		'slug'   => $current_version,
-	) );
+	$version = get_terms(
+		'wp-parser-since',
+		array(
+			'number' => '1',
+			'order'  => 'DESC',
+			'slug'   => $current_version,
+		)
+	);
 
 	return is_wp_error( $version ) ? $version : reset( $version );
 }
@@ -631,7 +650,7 @@ function get_site_section_title() {
  * Get post type name
  *
  * @param string $post_type
- * @param bool $plural
+ * @param bool   $plural
  *
  * @return string
  */
@@ -662,7 +681,7 @@ function get_signature( $post_id = null ) {
 	}
 
 	$args         = get_post_meta( $post_id, '_wp-parser_args', true );
-	$tags 		  = get_post_meta( $post_id, '_wp-parser_tags', true );
+	$tags         = get_post_meta( $post_id, '_wp-parser_tags', true );
 	$signature    = get_the_title( $post_id );
 	$params       = get_params();
 	$args_strings = array();
@@ -696,14 +715,12 @@ function get_signature( $post_id = null ) {
 			} else {
 				$hook_type = 'do_action';
 			}
-		} else {
-			if ( 'filter_reference' === $hook_type ) {
+		} elseif ( 'filter_reference' === $hook_type ) {
 				$hook_type = 'apply_filters_ref_array';
-			} elseif ( 'filter_deprecated' === $hook_type ) {
-				$hook_type = 'apply_filters_deprecated';
-			} else {
-				$hook_type = 'apply_filters';
-			}
+		} elseif ( 'filter_deprecated' === $hook_type ) {
+			$hook_type = 'apply_filters_deprecated';
+		} else {
+			$hook_type = 'apply_filters';
 		}
 
 		$delimiter = false !== strpos( $signature, '$' ) ? '"' : "'";
@@ -720,7 +737,7 @@ function get_signature( $post_id = null ) {
 	// Decorate and return function/class arguments.
 	if ( $args ) {
 		foreach ( $args as $arg ) {
-			$arg = (array) $arg;
+			$arg        = (array) $arg;
 			$arg_string = '';
 			if ( ! empty( $arg['name'] ) && ! empty( $types[ $arg['name'] ] ) ) {
 				$arg_string .= ' <span class="arg-type">' . $types[ $arg['name'] ] . '</span>';
@@ -731,7 +748,7 @@ function get_signature( $post_id = null ) {
 			}
 
 			if ( ! empty( $arg['default'] ) ) {
-				$arg_string .= '&nbsp;=&nbsp;<span class="arg-default">' . htmlentities( $arg['default'] ) . "</span>";
+				$arg_string .= '&nbsp;=&nbsp;<span class="arg-default">' . htmlentities( $arg['default'] ) . '</span>';
 			}
 
 			$args_strings[] = $arg_string;
@@ -759,9 +776,9 @@ function get_params( $post_id = null ) {
 	if ( empty( $post_id ) ) {
 		$post_id = get_the_ID();
 	}
-	$params = [];
-	$args = get_post_meta( $post_id, '_wp-parser_args', true );
-	$tags = get_post_meta( $post_id, '_wp-parser_tags', true );
+	$params = array();
+	$args   = get_post_meta( $post_id, '_wp-parser_args', true );
+	$tags   = get_post_meta( $post_id, '_wp-parser_tags', true );
 
 	if ( $tags ) {
 		$encountered_optional = false;
@@ -775,7 +792,7 @@ function get_params( $post_id = null ) {
 
 			if ( ! empty( $tag['name'] ) && 'param' == $tag['name'] ) {
 				$params[ $tag['variable'] ] = $tag;
-				$types = array();
+				$types                      = array();
 				if ( is_string( $tag['types'] ) ) {
 					$types[] = $tag['types'];
 				} else {
@@ -790,14 +807,14 @@ function get_params( $post_id = null ) {
 				}
 
 				$params[ $tag['variable'] ]['types'] = implode( '|', $types );
-				if ( strtolower( substr( $tag['content'], 0, 8 ) ) == "optional" ) {
+				if ( strtolower( substr( $tag['content'], 0, 8 ) ) == 'optional' ) {
 					$params[ $tag['variable'] ]['required'] = 'Optional';
-					$params[ $tag['variable'] ]['content'] = substr( $tag['content'], 9 );
-					$encountered_optional = true;
-				} elseif ( strtolower( substr( $tag['content'], 2, 9 ) ) == "optional." ) { // Hash notation param
+					$params[ $tag['variable'] ]['content']  = substr( $tag['content'], 9 );
+					$encountered_optional                   = true;
+				} elseif ( strtolower( substr( $tag['content'], 2, 9 ) ) == 'optional.' ) { // Hash notation param
 					$params[ $tag['variable'] ]['required'] = 'Optional';
-					$params[ $tag['variable'] ]['content'] = '{ ' . substr( $tag['content'], 12 );
-					$encountered_optional = true;
+					$params[ $tag['variable'] ]['content']  = '{ ' . substr( $tag['content'], 12 );
+					$encountered_optional                   = true;
 				} elseif ( $encountered_optional ) {
 					$params[ $tag['variable'] ]['required'] = 'Optional';
 				} else {
@@ -821,27 +838,26 @@ function get_params( $post_id = null ) {
 
 					// If a known default is stated in the parameter's description, try to remove it
 					// since the actual default value is displayed immediately following description.
-					$default = htmlentities( $arg['default'] );
+					$default                           = htmlentities( $arg['default'] );
 					$params[ $arg['name'] ]['content'] = str_replace( "default is {$default}.", '', $params[ $arg['name'] ]['content'] );
 					$params[ $arg['name'] ]['content'] = str_replace( "Default {$default}.", '', $params[ $arg['name'] ]['content'] );
 
 					// When the default is '', docs sometimes say "Default empty." or similar.
 					if ( "''" == $arg['default'] ) {
-						$params[ $arg['name'] ]['content'] = str_replace( "Default empty.", '', $params[ $arg['name'] ]['content'] );
-						$params[ $arg['name'] ]['content'] = str_replace( "Default empty string.", '', $params[ $arg['name'] ]['content'] );
+						$params[ $arg['name'] ]['content'] = str_replace( 'Default empty.', '', $params[ $arg['name'] ]['content'] );
+						$params[ $arg['name'] ]['content'] = str_replace( 'Default empty string.', '', $params[ $arg['name'] ]['content'] );
 
 						// Only a few cases of this. Remove once core is fixed.
-						$params[ $arg['name'] ]['content'] = str_replace( "default is empty string.", '', $params[ $arg['name'] ]['content'] );
+						$params[ $arg['name'] ]['content'] = str_replace( 'default is empty string.', '', $params[ $arg['name'] ]['content'] );
 					}
 					// When the default is array(), docs sometimes say "Default empty array." or similar.
-					elseif (  'array()' == $arg['default'] ) {
-						$params[ $arg['name'] ]['content'] = str_replace( "Default empty array.", '', $params[ $arg['name'] ]['content'] );
+					elseif ( 'array()' == $arg['default'] ) {
+						$params[ $arg['name'] ]['content'] = str_replace( 'Default empty array.', '', $params[ $arg['name'] ]['content'] );
 						// Not as common.
-						$params[ $arg['name'] ]['content'] = str_replace( "Default empty.", '', $params[ $arg['name'] ]['content'] );
+						$params[ $arg['name'] ]['content'] = str_replace( 'Default empty.', '', $params[ $arg['name'] ]['content'] );
 					}
 				}
 			}
-
 		}
 	}
 
@@ -861,7 +877,7 @@ function get_arguments( $post_id = null ) {
 		$post_id = get_the_ID();
 	}
 	$arguments = array();
-	$args = get_post_meta( $post_id, '_wp-parser_args', true );
+	$args      = get_post_meta( $post_id, '_wp-parser_args', true );
 
 	if ( $args ) {
 		foreach ( $args as $arg ) {
@@ -959,7 +975,7 @@ function get_changelog_data( $post_id = null ) {
 				$data[ $since_term->name ] = array(
 					'version'     => $since_term->name,
 					'description' => $description,
-					'since_url'   => get_term_link( $since_term )
+					'since_url'   => get_term_link( $since_term ),
 				);
 			}
 		}
@@ -997,7 +1013,7 @@ function is_deprecated( $post_id = null ) {
 	$tags           = get_post_meta( $post_id, '_wp-parser_tags', true );
 	$all_deprecated = wp_filter_object_list( $tags, array( 'name' => 'deprecated' ) );
 
-	return !! $all_deprecated;
+	return ! ! $all_deprecated;
 }
 
 /**
@@ -1013,9 +1029,9 @@ function get_deprecated( $post_id = null, $formatted = true ) {
 		$post_id = get_the_ID();
 	}
 
-	$types          = explode( '-', get_post_type( $post_id ) );
-	$type           = array_pop( $types );
-	$tags           = get_post_meta( $post_id, '_wp-parser_tags', true );
+	$types      = explode( '-', get_post_type( $post_id ) );
+	$type       = array_pop( $types );
+	$tags       = get_post_meta( $post_id, '_wp-parser_tags', true );
 	$deprecated = wp_filter_object_list( $tags, array( 'name' => 'deprecated' ) );
 	$deprecated = array_shift( $deprecated );
 
@@ -1047,17 +1063,18 @@ function get_deprecated( $post_id = null, $formatted = true ) {
 	// If no alternative resource was referenced, use the deprecation string, if
 	// present.
 	if ( ! $deprecation_info && ! empty( $deprecated['description'] ) ) {
-		$deprecation_info = ' ' . sanitize_text_field ( $deprecated['description'] );
+		$deprecation_info = ' ' . sanitize_text_field( $deprecated['description'] );
 		// Many deprecation strings use the syntax "Use function()" instead of the
 		// preferred "Use function() instead." Add it in if missing.
 		if ( false === strpos( $deprecation_info, 'instead' ) ) {
-			$deprecation_info = rtrim( $deprecation_info, '. ' );
+			$deprecation_info  = rtrim( $deprecation_info, '. ' );
 			$deprecation_info .= ' instead.'; // Not making translatable since rest of string is not translatable.
 		}
 	}
 
 	/* translators: 1: parsed post post, 2: String for alternative function (if one exists) */
-	$contents = sprintf( __( 'This %1$s has been deprecated.%2$s', 'wporg' ),
+	$contents = sprintf(
+		__( 'This %1$s has been deprecated.%2$s', 'wporg' ),
 		$type,
 		$deprecation_info
 	);
@@ -1068,7 +1085,7 @@ function get_deprecated( $post_id = null, $formatted = true ) {
 			$callout = new \WPorg_Handbook_Callout_Boxes();
 			$message = $callout->warning_shortcode( array(), $contents );
 		} else {
-			$message  = '<div class="deprecated">';
+			$message = '<div class="deprecated">';
 			/** This filter is documented in wp-includes/post-template.php */
 			$message .= apply_filters( 'the_content', $contents );
 			$message .= '</div>';
@@ -1190,8 +1207,8 @@ function post_type_has_usage_info( $post_type = null ) {
  * @return boolean
  */
 function post_type_has_uses_info( $post_type = null ) {
-	$post_type             = $post_type ? $post_type : get_post_type();
-	$post_types_with_uses  = array( 'wp-parser-function', 'wp-parser-method', 'wp-parser-class' );
+	$post_type            = $post_type ? $post_type : get_post_type();
+	$post_types_with_uses = array( 'wp-parser-function', 'wp-parser-method', 'wp-parser-class' );
 
 	return in_array( $post_type, $post_types_with_uses );
 }
@@ -1211,10 +1228,12 @@ function get_uses( $post = null ) {
 		if ( ! $extends ) {
 			return;
 		}
-		$connected = new \WP_Query( array(
-			'post_type' => array( 'wp-parser-class' ),
-			'name'      => $extends,
-		) );
+		$connected = new \WP_Query(
+			array(
+				'post_type' => array( 'wp-parser-class' ),
+				'name'      => $extends,
+			)
+		);
 		return $connected;
 	} elseif ( 'wp-parser-function' === $post_type ) {
 		$connection_types = array( 'functions_to_functions', 'functions_to_methods', 'functions_to_hooks' );
@@ -1222,13 +1241,15 @@ function get_uses( $post = null ) {
 		$connection_types = array( 'methods_to_functions', 'methods_to_methods', 'methods_to_hooks' );
 	}
 
-	$connected = new \WP_Query( array(
-		'post_type'           => array( 'wp-parser-function', 'wp-parser-method', 'wp-parser-hook' ),
-		'connected_type'      => $connection_types,
-		'connected_direction' => array( 'from', 'from', 'from' ),
-		'connected_items'     => $post_id,
-		'nopaging'            => true,
-	) );
+	$connected = new \WP_Query(
+		array(
+			'post_type'           => array( 'wp-parser-function', 'wp-parser-method', 'wp-parser-hook' ),
+			'connected_type'      => $connection_types,
+			'connected_direction' => array( 'from', 'from', 'from' ),
+			'connected_items'     => $post_id,
+			'nopaging'            => true,
+		)
+	);
 
 	return $connected;
 }
@@ -1248,7 +1269,7 @@ function get_used_by( $post = null ) {
 			break;
 
 		case 'wp-parser-method':
-			$connection_types = array( 'functions_to_methods', 'methods_to_methods', );
+			$connection_types = array( 'functions_to_methods', 'methods_to_methods' );
 			break;
 
 		case 'wp-parser-hook':
@@ -1256,11 +1277,13 @@ function get_used_by( $post = null ) {
 			break;
 
 		case 'wp-parser-class':
-			$connected = new \WP_Query( array(
-				'post_type'  => array( 'wp-parser-class' ),
-				'meta_key'   => '_wp-parser_extends',
-				'meta_value' => get_post_field( 'post_name', $post ),
-			) );
+			$connected = new \WP_Query(
+				array(
+					'post_type'  => array( 'wp-parser-class' ),
+					'meta_key'   => '_wp-parser_extends',
+					'meta_value' => get_post_field( 'post_name', $post ),
+				)
+			);
 			return $connected;
 			break;
 
@@ -1269,13 +1292,15 @@ function get_used_by( $post = null ) {
 
 	}
 
-	$connected = new \WP_Query( array(
-		'post_type'           => array( 'wp-parser-function', 'wp-parser-method' ),
-		'connected_type'      => $connection_types,
-		'connected_direction' => array( 'to', 'to' ),
-		'connected_items'     => get_post_field( 'ID', $post ),
-		'nopaging'            => true,
-	) );
+	$connected = new \WP_Query(
+		array(
+			'post_type'           => array( 'wp-parser-function', 'wp-parser-method' ),
+			'connected_type'      => $connection_types,
+			'connected_direction' => array( 'to', 'to' ),
+			'connected_items'     => get_post_field( 'ID', $post ),
+			'nopaging'            => true,
+		)
+	);
 
 	return $connected;
 }
@@ -1311,7 +1336,7 @@ function post_type_has_source_code( $post_type = null ) {
  * @return string
  */
 function get_source_code_root_dir() {
-	$root_dir = get_option( 'wp_parser_root_import_dir' );
+	$root_dir   = get_option( 'wp_parser_root_import_dir' );
 	$return_val = $root_dir ? trailingslashit( $root_dir ) : ABSPATH;
 	return $return_val;
 }
@@ -1348,18 +1373,18 @@ function get_source_code( $post_id = null, $force_parse = false ) {
 
 	// Sanity check to ensure proper conditions exist for parsing
 	if ( ! $source_file || ! $start_line || ! $end_line || ( $start_line > $end_line ) ) {
-		error_log( 'failed sanity check');
+		error_log( 'failed sanity check' );
 		return '';
 	}
 
 	// Find just the relevant source code
 	$source_code = '';
-	$handle = @fopen( get_source_code_root_dir() . $source_file, 'r' );		
+	$handle      = @fopen( get_source_code_root_dir() . $source_file, 'r' );
 
 	if ( $handle ) {
 		$line = -1;
 		while ( ! feof( $handle ) ) {
-			$line++;
+			++$line;
 			$source_line = fgets( $handle );
 
 			// Stop reading file once end_line is reached.
@@ -1375,10 +1400,8 @@ function get_source_code( $post_id = null, $force_parse = false ) {
 			$source_code .= $source_line;
 		}
 		fclose( $handle );
-	}
-	else
-	{
-		error_log( 'open failed');
+	} else {
+		error_log( 'open failed' );
 	}
 
 	update_post_meta( $post_id, $meta_key, addslashes( $source_code ) );
@@ -1446,7 +1469,7 @@ function get_note_author( $comment, $link = false ) {
 		$author = get_the_author_meta( 'display_name', $comment->user_id );
 	} else {
 		$url    = isset( $comment->comment_author_url ) ? $comment->comment_author_url : '';
-		$author = isset( $comment->comment_author ) ?  $comment->comment_author : '';
+		$author = isset( $comment->comment_author ) ? $comment->comment_author : '';
 	}
 
 	if ( $link && ( $url && $author ) ) {
@@ -1475,7 +1498,8 @@ function get_summary( $post = null ) {
 		if ( false !== strpos( $summary, '`' ) ) {
 			$summary = preg_replace_callback(
 				'/`([^`]*)`/',
-				function ( $matches ) { return '<code>' . htmlentities( $matches[1] ) . '</code>'; },
+				function ( $matches ) {
+					return '<code>' . htmlentities( $matches[1] ) . '</code>'; },
 				$summary
 			);
 		}
@@ -1489,7 +1513,8 @@ function get_summary( $post = null ) {
 		if ( false !== strpos( $summary, '<' ) ) {
 			$summary = preg_replace_callback(
 				'/(\s)(<[^ >]+>)(\s)/',
-				function ( $matches ) { return $matches[1] . '<code>' . htmlentities( $matches[2] ) . '</code>' . $matches[3]; },
+				function ( $matches ) {
+					return $matches[1] . '<code>' . htmlentities( $matches[2] ) . '</code>' . $matches[3]; },
 				$summary
 			);
 		}
@@ -1514,9 +1539,9 @@ function get_description( $post = null ) {
 	$description = $post->post_content;
 
 	/**
-	 * Marked up with <p></p> elements. Could be a paragraph break if the 
+	 * Marked up with <p></p> elements. Could be a paragraph break if the
 	 * DocBlock comment has both a short and a long description.
-	 * 
+	 *
 	 * We don't want to apply HTML written in code comments. Preserve <p>
 	 * elements but esc_html() everything else.
 	 */
@@ -1525,7 +1550,7 @@ function get_description( $post = null ) {
 	$description = str_replace( '[/p]', '</p>', str_replace( '[p]', '<p>', $description ) );
 
 	if ( $description ) {
-		$description = apply_filters( 'the_content', apply_filters( 'get_the_content' , $description ) );
+		$description = apply_filters( 'the_content', apply_filters( 'get_the_content', $description ) );
 	}
 
 	return $description;
@@ -1646,7 +1671,7 @@ function get_explanation_content( $_post ) {
 		$preview = wp_get_post_autosave( $post->ID );
 
 		if ( is_object( $preview ) ) {
-			$post = $preview;
+			$post    = $preview;
 			$content = get_post_field( 'post_content', $preview, 'display' );
 		}
 	} else {
@@ -1683,11 +1708,14 @@ function get_private_access_message( $post = null ) {
 
 	$tags = get_post_meta( $post->ID, '_wp-parser_tags', true );
 
-	$access_tags = wp_filter_object_list( $tags, array(
-		'name'    => 'access',
-		'content' => 'private'
-	) );
-	$is_private = ! empty( $access_tags );
+	$access_tags = wp_filter_object_list(
+		$tags,
+		array(
+			'name'    => 'access',
+			'content' => 'private',
+		)
+	);
+	$is_private  = ! empty( $access_tags );
 
 	if ( ! $is_private ) {
 		if ( 'private' === get_post_meta( $post->ID, '_wp-parser_visibility', true ) ) {
@@ -1715,7 +1743,8 @@ function get_private_access_message( $post = null ) {
 	}
 
 	/* translators: 1: String for alternative function (if one exists) */
-	$contents = sprintf( __( 'This function&#8217;s access is marked private. This means it is not intended for use by plugin or theme developers, only in other core functions. It is listed here for completeness.%s', 'wporg' ),
+	$contents = sprintf(
+		__( 'This function&#8217;s access is marked private. This means it is not intended for use by plugin or theme developers, only in other core functions. It is listed here for completeness.%s', 'wporg' ),
 		$alternative_string
 	);
 
@@ -1724,7 +1753,7 @@ function get_private_access_message( $post = null ) {
 		$callout = new \WPorg_Handbook_Callout_Boxes();
 		$message = $callout->alert_shortcode( array(), $contents );
 	} else {
-		$message  = '<div class="private-access">';
+		$message = '<div class="private-access">';
 		/** This filter is documented in wp-includes/post-template.php */
 		$message .= apply_filters( 'the_content', $contents );
 		$message .= '</div>';
@@ -1749,8 +1778,8 @@ function taxonomy_archive_filter() {
 		return;
 	}
 
-	$post_types  = get_parsed_post_types( 'labels' );
-	$post_types  = array( 'any' => __( 'Any type', 'wporg' ) ) + $post_types;
+	$post_types = get_parsed_post_types( 'labels' );
+	$post_types = array( 'any' => __( 'Any type', 'wporg' ) ) + $post_types;
 
 	$qv_post_type = array_filter( (array) get_query_var( 'post_type' ) );
 	$qv_post_type = $qv_post_type ? $qv_post_type : array( 'any' );
@@ -1793,14 +1822,14 @@ function get_reference_template_parts() {
 		'related',
 		'methods',
 		'changelog',
-		'notes'
+		'notes',
 	);
 
 	ob_start();
 
 	foreach ( $templates as $part ) {
-		//Corey changed
-		//get_template_part( 'docs/reference/template', $part );
+		// Corey changed
+		// get_template_part( 'docs/reference/template', $part );
 		get_template_part( 'reference/template', $part );
 	}
 

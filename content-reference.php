@@ -1,5 +1,30 @@
 <?php namespace DevHub; ?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
 	<?php echo get_deprecated(); ?>
@@ -19,9 +44,12 @@
 
 	// If the Handbook TOC is available, use it.
 	if ( class_exists( 'WPorg_Handbook_TOC' ) ) :
-		$TOC = new \WPorg_Handbook_TOC( get_parsed_post_types(), array(
-			'header_text' => __( 'Contents', 'wporg' )
-		) );
+		$TOC = new \WPorg_Handbook_TOC(
+			get_parsed_post_types(),
+			array(
+				'header_text' => __( 'Contents', 'wporg' ),
+			)
+		);
 
 		$content = '<div class="content-toc">' . $TOC->add_toc( $content ) . '</div>';
 

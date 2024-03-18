@@ -31,7 +31,7 @@ if ( $params = get_params() ) :
 						<?php endif; ?>
 					</p>
 					<?php if ( ! empty( $param['default'] ) ) : ?>
-						<p class="default"><?php _e( 'Default value:', 'wporg' );?> <?php echo htmlentities( $param['default'] ); ?></p>
+						<p class="default"><?php _e( 'Default value:', 'wporg' ); ?> <?php echo htmlentities( $param['default'] ); ?></p>
 					<?php endif; ?>
 				</dd>
 			<?php endforeach; ?>

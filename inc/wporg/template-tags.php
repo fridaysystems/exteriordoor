@@ -53,11 +53,13 @@ if ( ! function_exists( __NAMESPACE__ . '\entry_meta' ) ) :
 
 		if ( ! is_singular() && ! post_password_required() && ( comments_open() || get_comments_number() ) ) {
 			echo '<span class="comments-link">';
-			comments_popup_link( sprintf(
+			comments_popup_link(
+				sprintf(
 				/* translators: Post title. */
-				__( 'Leave a comment<span class="screen-reader-text"> on %s</span>', 'wporg' ),
-				get_the_title()
-			) );
+					__( 'Leave a comment<span class="screen-reader-text"> on %s</span>', 'wporg' ),
+					get_the_title()
+				)
+			);
 			echo '</span>';
 		}
 	}
@@ -142,11 +144,13 @@ if ( ! function_exists( __NAMESPACE__ . '\categorized_blog' ) ) :
 
 		if ( false === $all_the_cool_cats ) {
 			// Create an array of all the categories that are attached to posts.
-			$all_the_cool_cats = get_categories( array(
-				'fields' => 'ids',
-				// We only need to know if there is more than one category.
-				'number' => 2,
-			) );
+			$all_the_cool_cats = get_categories(
+				array(
+					'fields' => 'ids',
+					// We only need to know if there is more than one category.
+					'number' => 2,
+				)
+			);
 
 			// Count the number of categories that are attached to the posts.
 			$all_the_cool_cats = count( $all_the_cool_cats );

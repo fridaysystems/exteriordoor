@@ -47,10 +47,10 @@ class DevHub_User_Contributed_Notes_Voting {
 	 */
 	public static function do_init() {
 		// Save a non-AJAX submitted vote.
-		add_action( 'template_redirect',  array( __CLASS__, 'vote_submission' ) );
+		add_action( 'template_redirect', array( __CLASS__, 'vote_submission' ) );
 
 		// Save AJAX submitted vote.
-		add_action( 'wp_ajax_note_vote',  array( __CLASS__, 'ajax_vote_submission' ) );
+		add_action( 'wp_ajax_note_vote', array( __CLASS__, 'ajax_vote_submission' ) );
 
 		// Enqueue scripts and styles.
 		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'scripts_and_styles' ), 11 );
@@ -94,7 +94,6 @@ class DevHub_User_Contributed_Notes_Voting {
 				wp_redirect( get_comment_link( $_REQUEST['comment'] ) );
 				exit();
 			}
-
 		}
 
 		return $success;
@@ -174,8 +173,8 @@ class DevHub_User_Contributed_Notes_Voting {
 	 *
 	 * @access public
 	 *
-	 * @param  int  $user_id    Optional. The user ID. If not defined, assumes current user.
-	 * @param  int  $comment_id Optional. The comment ID. If not defined, assumes being able to comment generally.
+	 * @param  int $user_id    Optional. The user ID. If not defined, assumes current user.
+	 * @param  int $comment_id Optional. The comment ID. If not defined, assumes being able to comment generally.
 	 * @return bool True if the user can vote.
 	 */
 	public static function user_can_vote( $user_id = '', $comment_id = '' ) {
@@ -206,7 +205,7 @@ class DevHub_User_Contributed_Notes_Voting {
 	/**
 	 * Determines if a note was submitted by the current user.
 	 *
-	 * @param int   $comment_id The comment ID, or empty to use current comment.
+	 * @param int $comment_id The comment ID, or empty to use current comment.
 	 * @return bool True if the note was submitted by the current user.
 	 */
 	public static function is_current_user_note( $comment_id = '' ) {
@@ -234,8 +233,8 @@ class DevHub_User_Contributed_Notes_Voting {
 	 *
 	 * @access public
 	 *
-	 * @param  int    $comment_id The comment ID
-	 * @param  int    $user_id    Optional. The user ID. If not defined, assumes current user.
+	 * @param  int $comment_id The comment ID
+	 * @param  int $user_id    Optional. The user ID. If not defined, assumes current user.
 	 * @return bool   True if the user has upvoted the comment.
 	 */
 	public static function has_user_upvoted_comment( $comment_id, $user_id = '' ) {
@@ -259,8 +258,8 @@ class DevHub_User_Contributed_Notes_Voting {
 	 *
 	 * @access public
 	 *
-	 * @param  int    $comment_id The comment ID
-	 * @param  int    $user_id    Optional. The user ID. If not defined, assumes current user.
+	 * @param  int $comment_id The comment ID
+	 * @param  int $user_id    Optional. The user ID. If not defined, assumes current user.
 	 * @return bool   True if the user has downvoted the comment.
 	 */
 	public static function has_user_downvoted_comment( $comment_id, $user_id = '' ) {
@@ -286,7 +285,7 @@ class DevHub_User_Contributed_Notes_Voting {
 	 *
 	 * @param int $comment_id The comment ID, or empty to use current comment.
 	 */
-	public static function show_voting( $comment_id = '') {
+	public static function show_voting( $comment_id = '' ) {
 		if ( ! $comment_id ) {
 			global $comment;
 			$comment_id = $comment->comment_ID;
@@ -312,13 +311,13 @@ class DevHub_User_Contributed_Notes_Voting {
 		$user_upvoted = self::has_user_upvoted_comment( $comment_id );
 		if ( $can_vote ) {
 			$cancel = $user_upvoted ? '. ' . $cancel_str . '.' : '';
-			$title = $user_upvoted ?
+			$title  = $user_upvoted ?
 				__( 'You have voted to indicate this note was helpful', 'wporg' ) . $cancel :
 				__( 'Vote up if this note was helpful', 'wporg' );
-			$tag = 'a';
+			$tag    = 'a';
 		} else {
 			$title = ! $logged_in ? $log_in_str : $disabled_str;
-			$tag = $logged_in ? 'span' : 'a';
+			$tag   = $logged_in ? 'span' : 'a';
 		}
 		echo "<{$tag} "
 			. 'class="user-note-voting-up' . ( $user_upvoted ? ' user-voted' : '' )
@@ -327,13 +326,20 @@ class DevHub_User_Contributed_Notes_Voting {
 			. '" data-vote="up';
 		if ( 'a' === $tag ) {
 			$up_url = $logged_in ?
-				add_query_arg( array( '_wpnonce' => $nonce , 'comment' => $comment_id, 'vote' => 'up' ), $comment_link ) :
+				add_query_arg(
+					array(
+						'_wpnonce' => $nonce,
+						'comment'  => $comment_id,
+						'vote'     => 'up',
+					),
+					$comment_link
+				) :
 				$log_in_url;
 			echo '" href="' . esc_url( $up_url );
 		}
 		echo '">';
 		echo '<span class="dashicons dashicons-arrow-up" aria-hidden="true"></span>';
-		echo '<span class="screen-reader-text">' . $title .  '</span>';
+		echo '<span class="screen-reader-text">' . $title . '</span>';
 		echo "</{$tag}>";
 
 		// Total count
@@ -345,7 +351,7 @@ class DevHub_User_Contributed_Notes_Voting {
 		echo '<span '
 			. 'class="user-note-voting-count ' . esc_attr( $class ) . '" '
 			. 'title="' . esc_attr( $title ) . '">'
-			. '<span class="screen-reader-text">' . __( 'Vote results for this note: ', 'wporg' ) .  '</span>'
+			. '<span class="screen-reader-text">' . __( 'Vote results for this note: ', 'wporg' ) . '</span>'
 			. self::count_votes( $comment_id, 'difference' )
 			. '</span>';
 
@@ -353,13 +359,13 @@ class DevHub_User_Contributed_Notes_Voting {
 		$user_downvoted = ( $user_upvoted ? false : self::has_user_downvoted_comment( $comment_id ) );
 		if ( $can_vote ) {
 			$cancel = $user_downvoted ? '. ' . $cancel_str . '.' : '';
-			$title = $user_downvoted ?
+			$title  = $user_downvoted ?
 				__( 'You have voted to indicate this note was not helpful', 'wporg' ) . $cancel :
 				__( 'Vote down if this note was not helpful', 'wporg' );
-			$tag = 'a';
+			$tag    = 'a';
 		} else {
 			$title = ! $logged_in ? $log_in_str : $disabled_str;
-			$tag = $logged_in ? 'span' : 'a';
+			$tag   = $logged_in ? 'span' : 'a';
 		}
 		echo "<{$tag} "
 			. 'class="user-note-voting-down' . ( $user_downvoted ? ' user-voted' : '' )
@@ -368,13 +374,20 @@ class DevHub_User_Contributed_Notes_Voting {
 			. '" data-vote="down';
 		if ( 'a' === $tag ) {
 			$down_url = $logged_in ?
-				add_query_arg( array( '_wpnonce' => $nonce , 'comment' => $comment_id, 'vote' => 'down' ), $comment_link ) :
+				add_query_arg(
+					array(
+						'_wpnonce' => $nonce,
+						'comment'  => $comment_id,
+						'vote'     => 'down',
+					),
+					$comment_link
+				) :
 				$log_in_url;
 			echo '" href="' . esc_url( $down_url );
 		}
 		echo '">';
 		echo '<span class="dashicons dashicons-arrow-down" aria-hidden="true"></span>';
-		echo '<span class="screen-reader-text">' . $title .  '</span>';
+		echo '<span class="screen-reader-text">' . $title . '</span>';
 		echo "</{$tag}>";
 
 		echo '</div>';
@@ -421,7 +434,7 @@ class DevHub_User_Contributed_Notes_Voting {
 					return 0;
 				}
 				// More precise, and floatval() will drop ".00" when present
-				//return floatval( round( ( $up / $total ) * 100, 2 ) );
+				// return floatval( round( ( $up / $total ) * 100, 2 ) );
 				// Less precise; rounds to nearest integer
 				return round( ( $up / $total ) * 100 );
 		}
@@ -432,8 +445,8 @@ class DevHub_User_Contributed_Notes_Voting {
 	 *
 	 * @access public
 	 *
-	 * @param  int  $comment_id The comment ID
-	 * @param  int  $user_id    Optional. The user ID. Default is current user.
+	 * @param  int $comment_id The comment ID
+	 * @param  int $user_id    Optional. The user ID. Default is current user.
 	 * @return bool Whether the up vote succeed (a new vote or a change in vote).
 	 */
 	public static function vote_up( $comment_id, $user_id = '' ) {
@@ -445,8 +458,8 @@ class DevHub_User_Contributed_Notes_Voting {
 	 *
 	 * @access public
 	 *
-	 * @param  int  $comment_id The comment ID
-	 * @param  int  $user_id    Optional. The user ID. Default is current user.
+	 * @param  int $comment_id The comment ID
+	 * @param  int $user_id    Optional. The user ID. Default is current user.
 	 * @return bool Whether the down vote succeed (a new vote or a change in vote).
 	 */
 	public static function vote_down( $comment_id, $user_id = '' ) {
@@ -533,7 +546,6 @@ class DevHub_User_Contributed_Notes_Voting {
 
 		return true;
 	}
-
 } // DevHub_User_Contributed_Notes_Voting
 
 DevHub_User_Contributed_Notes_Voting::init();

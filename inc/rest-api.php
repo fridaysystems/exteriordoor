@@ -33,4 +33,3 @@ class DevHub_REST_API extends DevHub_Docs_Importer {
 }
 
 DevHub_REST_API::instance()->init();
-

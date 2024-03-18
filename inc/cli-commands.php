@@ -41,10 +41,10 @@ class DevHub_Command extends WP_CLI_Command {
 		}
 		WP_CLI::log( "Importing as user ID $user_id ({$user->user_nicename})." );
 
-		$plugins = [
+		$plugins = array(
 			'phpdoc-parser'  => 'phpdoc-parser/plugin.php',
 			'posts-to-posts' => 'posts-to-posts/posts-to-posts.php',
-		];
+		);
 
 		// Verify path is a file or directory.
 		if ( ! file_exists( $path ) ) {
@@ -57,7 +57,7 @@ class DevHub_Command extends WP_CLI_Command {
 		}
 
 		// Verify path looks like WP.
-		if ( ! file_exists ( $path . '/wp-includes/version.php' ) ) {
+		if ( ! file_exists( $path . '/wp-includes/version.php' ) ) {
 			WP_CLI::error( 'Path provided for WordPress source to parse does not contain WordPress files.' );
 		}
 
@@ -70,7 +70,7 @@ class DevHub_Command extends WP_CLI_Command {
 		$last_parsed_wp_ver = get_option( 'wp_parser_imported_wp_version' );
 		if ( $last_parsed_wp_ver && $last_parsed_wp_ver == $version ) {
 			$last_parsed_date = get_option( 'wp_parser_last_import' );
-			WP_CLI::confirm( "Looks like WP $version was already parsed on " . date_i18n( 'Y-m-d H:i', $last_parsed_date ) . ". Proceed anyway?" );
+			WP_CLI::confirm( "Looks like WP $version was already parsed on " . date_i18n( 'Y-m-d H:i', $last_parsed_date ) . '. Proceed anyway?' );
 		}
 
 		// Verify that the PHP-Parser plugin is available locally.
@@ -186,7 +186,6 @@ class DevHub_Command extends WP_CLI_Command {
 			WP_CLI::log( $value );
 		}
 	}
-
 }
 
 WP_CLI::add_command( 'devhub', 'DevHub_Command' );

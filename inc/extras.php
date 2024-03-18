@@ -38,7 +38,7 @@ add_filter( 'body_class', 'wporg_developer_body_classes' );
 /**
  * Prefixes excerpts for archive view with content type label.
  *
- * @param string  $excerpt The excerpt.
+ * @param string $excerpt The excerpt.
  * @return string
  */
 function wporg_filter_archive_excerpt( $excerpt ) {
@@ -90,14 +90,14 @@ function wporg_filter_archive_title( $title, $post = null ) {
 
 	return $title;
 }
-add_filter( 'the_title',         'wporg_filter_archive_title', 10, 2 );
+add_filter( 'the_title', 'wporg_filter_archive_title', 10, 2 );
 add_filter( 'single_post_title', 'wporg_filter_archive_title', 10, 2 );
 
 /**
  * Removes the query string from get_pagenum_link() for loop pagination.
  * Fixes pagination links like example.com/?foo=bar/page/2/.
  *
- * @param array  $args Arguments for the paginate_links() function.
+ * @param array $args Arguments for the paginate_links() function.
  * @return array       Arguments for the paginate_links() function.
  */
 function wporg_loop_pagination_args( $args ) {
@@ -105,10 +105,10 @@ function wporg_loop_pagination_args( $args ) {
 
 	// Add the $base argument to the array if the user is using permalinks.
 	if ( $wp_rewrite->using_permalinks() && ! is_search() ) {
-		$pagenum = trailingslashit( preg_replace( '/\?.*/', '', get_pagenum_link() ) );
+		$pagenum         = trailingslashit( preg_replace( '/\?.*/', '', get_pagenum_link() ) );
 		$pagination_base = $wp_rewrite->pagination_base;
 
-		$args['base'] = user_trailingslashit(  $pagenum . "{$pagination_base}/%#%" );
+		$args['base'] = user_trailingslashit( $pagenum . "{$pagination_base}/%#%" );
 	}
 
 	return $args;

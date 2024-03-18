@@ -49,7 +49,7 @@ class DevHub_Docs_Importer extends Importer {
 		$class = get_called_class();
 
 		if ( empty( static::$instances[ $class ] ) ) {
-			static::$instances[ $class ] = new $class;
+			static::$instances[ $class ] = new $class();
 		}
 
 		return static::$instances[ $class ];
@@ -94,11 +94,11 @@ class DevHub_Docs_Importer extends Importer {
 		$this->base         = $base;
 		$this->manifest_url = $manifest_url;
 
-		add_filter( 'devhub_handbook_post_types',                    array( $this, 'amend_post_types' ) );
-		add_filter( 'handbook_post_type_defaults',                   array( $this, 'override_post_type_slug' ), 10, 2 );
-		add_filter( 'cron_schedules',                                array( $this, 'filter_cron_schedules' ) );
-		add_action( 'init',                                          array( $this, 'register_cron_jobs' ) );
-		add_action( "devhub_{$this->post_type}_import_manifest",     array( $this, 'import_manifest' ) );
+		add_filter( 'devhub_handbook_post_types', array( $this, 'amend_post_types' ) );
+		add_filter( 'handbook_post_type_defaults', array( $this, 'override_post_type_slug' ), 10, 2 );
+		add_filter( 'cron_schedules', array( $this, 'filter_cron_schedules' ) );
+		add_action( 'init', array( $this, 'register_cron_jobs' ) );
+		add_action( "devhub_{$this->post_type}_import_manifest", array( $this, 'import_manifest' ) );
 		add_action( "devhub_{$this->post_type}_import_all_markdown", array( $this, 'import_all_markdown' ) );
 
 		$editor = new Editor( $this );
@@ -147,7 +147,7 @@ class DevHub_Docs_Importer extends Importer {
 		if ( empty( $schedules['15_minutes'] ) ) {
 			$schedules['15_minutes'] = array(
 				'interval' => 15 * MINUTE_IN_SECONDS,
-				'display'  => '15 minutes'
+				'display'  => '15 minutes',
 			);
 		}
 

@@ -27,22 +27,24 @@ if ( ! empty( $changelog_data ) ) :
 			<tbody>
 				<?php
 				$count = count( $changelog_data );
-				$i = 0;
+				$i     = 0;
 
 				$changelog_data = array_reverse( $changelog_data );
 
-				foreach ( $changelog_data as $version => $data ) : ?>
+				foreach ( $changelog_data as $version => $data ) :
+					?>
 					<?php
 					// Add "Introduced." for the initial version description, last since the array is reversed.
 					$data['description'] = ( $i == ( $count - 1 ) ) ? __( 'Introduced.', 'wporg' ) : $data['description'];
 
-					$version_link = sprintf( '<a href="%1$s" alt="%2$s">%3$s</a>',
+					$version_link = sprintf(
+						'<a href="%1$s" alt="%2$s">%3$s</a>',
 						esc_url( $data['since_url'] ),
 						esc_attr( "WordPress {$version}" ),
 						esc_html( $version )
 					);
 
-					$i++;
+					++$i;
 					?>
 
 					<tr>
@@ -54,4 +56,3 @@ if ( ! empty( $changelog_data ) ) :
 		</table>
 	</section>
 <?php endif; ?>
-

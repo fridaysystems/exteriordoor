@@ -23,55 +23,55 @@ class DevHub_User_Submitted_Content {
 	public static function do_init() {
 
 		// Disable pings.
-		add_filter( 'pings_open',                       '__return_false' );
+		add_filter( 'pings_open', '__return_false' );
 
 		// Sets whether submitting notes is open for the user
-		add_filter( 'comments_open',                    '\DevHub\\can_user_post_note', 10, 2 );
+		add_filter( 'comments_open', '\DevHub\\can_user_post_note', 10, 2 );
 
 		// Enqueue scripts and styles
-		add_action( 'wp_enqueue_scripts',               array( __CLASS__, 'scripts_and_styles' ), 11 );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'scripts_and_styles' ), 11 );
 
 		// Force comment registration to be true
 		add_filter( 'pre_option_comment_registration', '__return_true' );
 
 		// Force comment moderation to be true
-		add_filter( 'pre_option_comment_moderation',   '__return_true' );
+		add_filter( 'pre_option_comment_moderation', '__return_true' );
 
 		// Remove reply to link
-		add_filter( 'comment_reply_link',              '__return_empty_string' );
+		add_filter( 'comment_reply_link', '__return_empty_string' );
 
 		// Remove cancel reply link
-		add_filter( 'cancel_comment_reply_link',       '__return_empty_string' );
+		add_filter( 'cancel_comment_reply_link', '__return_empty_string' );
 
 		// Disable smilie conversion
-		remove_filter( 'comment_text',                 'convert_smilies',    20 );
+		remove_filter( 'comment_text', 'convert_smilies', 20 );
 
 		// Disable capital_P_dangit
-		remove_filter( 'comment_text',                 'capital_P_dangit',   31 );
+		remove_filter( 'comment_text', 'capital_P_dangit', 31 );
 
 		// Enable shortcodes for comments
-		add_filter( 'comment_text',                    'do_shortcode' );
+		add_filter( 'comment_text', 'do_shortcode' );
 
 		// Customize allowed tags
-		add_filter( 'wp_kses_allowed_html',            array( __CLASS__, 'wp_kses_allowed_html' ), 10, 2 );
+		add_filter( 'wp_kses_allowed_html', array( __CLASS__, 'wp_kses_allowed_html' ), 10, 2 );
 
 		// Make 'php' the default language
 		add_filter( 'syntaxhighlighter_shortcodeatts', array( __CLASS__, 'syntaxhighlighter_shortcodeatts' ) );
 
 		// Tweak code contained in shortcode
-		add_filter( 'syntaxhighlighter_precode',       array( __CLASS__, 'syntaxhighlighter_precode' ) );
+		add_filter( 'syntaxhighlighter_precode', array( __CLASS__, 'syntaxhighlighter_precode' ) );
 
 		// Allowed HTML for a new child comment
-		add_filter( 'preprocess_comment',              array( __CLASS__, 'comment_new_allowed_html' ) );
+		add_filter( 'preprocess_comment', array( __CLASS__, 'comment_new_allowed_html' ) );
 
 		// Allowed HTML for an edited child comment (There is no decent hook to filter child comments only)
-		add_action( 'edit_comment',                    array( __CLASS__, 'comment_edit_allowed_html' ) );
+		add_action( 'edit_comment', array( __CLASS__, 'comment_edit_allowed_html' ) );
 
 		// Adds hidden fields to a comment form for editing
-		add_filter( 'comment_form_submit_field',       array( __CLASS__, 'add_hidden_fields' ), 10, 2 );
+		add_filter( 'comment_form_submit_field', array( __CLASS__, 'add_hidden_fields' ), 10, 2 );
 
 		// Disable the search query in the insert link modal window
-		add_filter( 'wp_link_query_args',              array( __CLASS__, 'disable_link_query' ) );
+		add_filter( 'wp_link_query_args', array( __CLASS__, 'disable_link_query' ) );
 	}
 
 	/**
@@ -116,8 +116,8 @@ class DevHub_User_Submitted_Content {
 
 		if ( $data['comment_content'] !== $content ) {
 			$commentarr = array(
-				'comment_ID' => $data['comment_ID'],
-				'comment_content' => $data['comment_content']
+				'comment_ID'      => $data['comment_ID'],
+				'comment_content' => $data['comment_content'],
 			);
 
 			// Update comment content.
@@ -172,10 +172,14 @@ class DevHub_User_Submitted_Content {
 
 			wp_enqueue_script( 'wporg-developer-user-notes', get_stylesheet_directory_uri() . '/js/user-notes.js', array( 'jquery', 'quicktags' ), '20200110', true );
 			wp_enqueue_script( 'wporg-developer-user-notes-feedback', get_stylesheet_directory_uri() . '/js/user-notes-feedback.js', array( 'jquery', 'quicktags' ), '20181023', true );
-			wp_localize_script( 'wporg-developer-user-notes-feedback', 'wporg_note_feedback', array(
-				'show'             => __( 'Show Feedback', 'wporg' ),
-				'hide'             => __( 'Hide Feedback', 'wporg' ),
-			) );
+			wp_localize_script(
+				'wporg-developer-user-notes-feedback',
+				'wporg_note_feedback',
+				array(
+					'show' => __( 'Show Feedback', 'wporg' ),
+					'hide' => __( 'Hide Feedback', 'wporg' ),
+				)
+			);
 		}
 	}
 
@@ -197,7 +201,7 @@ class DevHub_User_Submitted_Content {
 	 * @return string
 	 */
 	public static function syntaxhighlighter_precode( $code ) {
-		return str_replace( 'Wordpress', 'Word&#112;ress', $code );
+		return str_replace( 'WordPress', 'Word&#112;ress', $code );
 	}
 
 	/**
@@ -227,7 +231,7 @@ class DevHub_User_Submitted_Content {
 	 * @param array $query An array of WP_Query arguments.
 	 */
 	public static function disable_link_query( $query ) {
-		$query['post__in'] = array(0);
+		$query['post__in'] = array( 0 );
 		return $query;
 	}
 
@@ -277,13 +281,13 @@ class DevHub_User_Submitted_Content {
 				__( 'You must <a href="%s">log in</a> before being able to contribute a note or feedback.', 'wporg' ),
 				'https://login.wordpress.org/?redirect_to=' . urlencode( get_comments_link() )
 			) . '</p>',
-			'title_reply'         => '', //'Add Example'
+			'title_reply'         => '', // 'Add Example'
 			'title_reply_to'      => '',
 		);
 
 		if ( class_exists( 'DevHub_Note_Preview' ) ) {
 			$args['comment_notes_after'] = DevHub_Note_Preview::comment_preview() . $args['comment_notes_after'];
-			$args['class_form']          = "comment-form tab-container";
+			$args['class_form']          = 'comment-form tab-container';
 		}
 
 		$args['comment_field'] = self::wp_editor_comments( $label, $comment );
@@ -327,17 +331,21 @@ class DevHub_User_Submitted_Content {
 		}
 
 		echo '<div class="comment-form-comment tab-section" id="comment-form-comment">';
-		wp_editor( $content, 'comment', array(
+		wp_editor(
+			$content,
+			'comment',
+			array(
 				'media_buttons' => false,
 				'editor_css'    => self::get_editor_style(),
 				'textarea_name' => 'comment',
 				'textarea_rows' => 8,
 				'quicktags'     => array(
-					'buttons' => 'strong,em,ul,ol,li,link'
+					'buttons' => 'strong,em,ul,ol,li,link',
 				),
 				'teeny'         => true,
 				'tinymce'       => false,
-			) );
+			)
+		);
 		echo '</div>';
 		return ob_get_clean();
 	}
@@ -361,18 +369,18 @@ class DevHub_User_Submitted_Content {
 		$comment_id = absint( $comment->comment_ID );
 
 		static $instance = 0;
-		$instance++;
+		++$instance;
 
-		$display       = ( 'hide' === $display ) ? ' style="display: none;"' : '';
-		$parent        = $comment_id;
-		$action        = site_url( '/wp-comments-post.php' );
-		$title         = __( 'Add feedback to this note', 'wporg' );
-		$button_text   = __( 'Add Feedback', 'wporg' );
-		$post_id       = isset( $comment->comment_post_ID ) ? $comment->comment_post_ID : get_the_ID();
-		$content       = '';
-		$form_type     = '';
-		$note_link     = '';
-		$class         = '';
+		$display     = ( 'hide' === $display ) ? ' style="display: none;"' : '';
+		$parent      = $comment_id;
+		$action      = site_url( '/wp-comments-post.php' );
+		$title       = __( 'Add feedback to this note', 'wporg' );
+		$button_text = __( 'Add Feedback', 'wporg' );
+		$post_id     = isset( $comment->comment_post_ID ) ? $comment->comment_post_ID : get_the_ID();
+		$content     = '';
+		$form_type   = '';
+		$note_link   = '';
+		$class       = '';
 
 		if ( $edit ) {
 			$content       = isset( $comment->comment_content ) ? $comment->comment_content : '';
@@ -386,7 +394,7 @@ class DevHub_User_Submitted_Content {
 			$class         = ' edit-feedback-editor';
 
 			if ( $parent && $post_url && $parent_author ) {
-				$post_url  = $post_url . '#comment-' . $parent;
+				$post_url    = $post_url . '#comment-' . $parent;
 				$parent_note = sprintf( __( 'note %d', 'wporg' ), $parent );
 
 				/* translators: 1: note, 2: note author name */
@@ -407,17 +415,21 @@ class DevHub_User_Submitted_Content {
 
 		echo "<form id='feedback-form-{$instance}{$form_type}' class='feedback-form' method='post' action='{$action}' name='feedback-form-{$instance}'>\n";
 		echo self::get_editor_rules( 'feedback', $note_link );
-		wp_editor( $content, 'feedback-comment-' . $instance, array(
+		wp_editor(
+			$content,
+			'feedback-comment-' . $instance,
+			array(
 				'media_buttons' => false,
 				'textarea_name' => 'comment',
 				'textarea_rows' => 3,
 				'quicktags'     => array(
-					'buttons' => 'strong,em,link'
+					'buttons' => 'strong,em,link',
 				),
 				'editor_css'    => self::get_editor_style(),
 				'teeny'         => true,
 				'tinymce'       => false,
-			) );
+			)
+		);
 
 		echo '<p><strong>' . __( 'Note', 'wporg' ) . '</strong>: ' . __( 'No newlines allowed', 'wporg' ) . '. ';
 		printf( __( 'Allowed tags: %s', 'wporg' ), trim( $allowed_tags, ', ' ) ) . "</p>\n";
@@ -502,13 +514,12 @@ class DevHub_User_Submitted_Content {
 	 * @return string Hidden input fields HTML.
 	 */
 	public static function get_edit_fields( $comment_id, $instance = 0 ) {
-		$fields = "<input type='hidden' name='comment_ID' id='comment_ID-{$instance}' value='{$comment_id}' />\n";
+		$fields  = "<input type='hidden' name='comment_ID' id='comment_ID-{$instance}' value='{$comment_id}' />\n";
 		$fields .= "<input type='hidden' name='update_user_note' id='update_user_note-{$instance}' value='1' />\n";
 		$fields .= wp_nonce_field( 'update_user_note_' . $comment_id, '_wpnonce', true, false );
 
 		return $fields;
 	}
-
 } // DevHub_User_Submitted_Content
 
 DevHub_User_Submitted_Content::init();

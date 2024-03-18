@@ -9,7 +9,12 @@
 namespace DevHub;
 
 if ( 'wp-parser-class' === get_post_type() ) :
-	if ( $children = get_children( array( 'post_parent' => get_the_ID(), 'post_status' => 'publish' ) ) ) :
+	if ( $children = get_children(
+		array(
+			'post_parent' => get_the_ID(),
+			'post_status' => 'publish',
+		)
+	) ) :
 		usort( $children, __NAMESPACE__ . '\\compare_objects_by_name' );
 		?>
 		<hr />
@@ -20,15 +25,20 @@ if ( 'wp-parser-class' === get_post_type() ) :
 					<li><a href="<?php echo get_permalink( $child->ID ); ?>">
 							<?php
 							$title = get_the_title( $child );
-							$pos = ( $i = strrpos( $title, ':' ) ) ? $i + 1 : 0;
+							$pos   = ( $i = strrpos( $title, ':' ) ) ? $i + 1 : 0;
 							echo substr( $title, $pos );
-							?></a>
-						<?php if ( $excerpt = apply_filters( 'get_the_excerpt', $child->post_excerpt, $child ) ) {
+							?>
+							</a>
+						<?php
+						if ( $excerpt = apply_filters( 'get_the_excerpt', $child->post_excerpt, $child ) ) {
 							echo '&mdash; ' . sanitize_text_field( $excerpt );
-						} ?>
-						<?php if ( is_deprecated( $child->ID ) ) {
+						}
+						?>
+						<?php
+						if ( is_deprecated( $child->ID ) ) {
 							echo '&mdash; <span class="deprecated-method">' . __( 'deprecated', 'wporg' ) . '</span>';
-						} ?>
+						}
+						?>
 					</li>
 				<?php endforeach; ?>
 			</ul>

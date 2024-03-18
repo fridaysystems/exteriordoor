@@ -16,7 +16,7 @@ class Devhub_Handbooks {
 	 * @var array
 	 * @access public
 	 */
-	public static $post_types = [];
+	public static $post_types = array();
 
 	/**
 	 * Hidden handbook post types.
@@ -26,7 +26,7 @@ class Devhub_Handbooks {
 	 * @var array
 	 * @access public
 	 */
-	public static $hidden_handbooks = [];
+	public static $hidden_handbooks = array();
 
 	/**
 	 * Initializer
@@ -46,11 +46,11 @@ class Devhub_Handbooks {
 	 * @access public
 	 */
 	public static function do_init() {
-		add_filter( 'query_vars',  array( __CLASS__, 'add_query_vars' ) );
+		add_filter( 'query_vars', array( __CLASS__, 'add_query_vars' ) );
 
 		add_action( 'template_redirect', array( __CLASS__, 'redirect_hidden_handbooks' ), 1 );
 
-		add_action( 'pre_get_posts',  array( __CLASS__, 'pre_get_posts' ), 9 );
+		add_action( 'pre_get_posts', array( __CLASS__, 'pre_get_posts' ), 9 );
 
 		add_action( 'after_switch_theme', array( __CLASS__, 'add_roles' ) );
 
@@ -70,7 +70,7 @@ class Devhub_Handbooks {
 	/**
 	 * Add public query vars for handbooks.
 	 *
-	 * @param array   $public_query_vars The array of whitelisted query variables.
+	 * @param array $public_query_vars The array of whitelisted query variables.
 	 * @return array Array with public query vars.
 	 */
 	public static function add_query_vars( $public_query_vars ) {
@@ -92,7 +92,7 @@ class Devhub_Handbooks {
 		if ( in_array( wporg_get_current_handbook(), self::$hidden_handbooks ) ) {
 			wp_safe_redirect( home_url() );
 			exit();
-		}	
+		}
 	}
 
 	/**
@@ -120,10 +120,10 @@ class Devhub_Handbooks {
 	 *
 	 * @param  array $types The default handbook types.
 	 * @return array
-	*/
+	 */
 	public static function filter_handbook_post_types( $types ) {
 		if ( ! self::$post_types ) {
-			self::$post_types = apply_filters( 'devhub_handbook_post_types', [ 'apis', 'plugin', 'theme' ] );
+			self::$post_types = apply_filters( 'devhub_handbook_post_types', array( 'apis', 'plugin', 'theme' ) );
 		}
 
 		return self::$post_types;
@@ -133,7 +133,6 @@ class Devhub_Handbooks {
 	 * Create the handbook_editor role which can only edit handbooks.
 	 *
 	 * @access public
-	 *
 	 */
 	public static function add_roles() {
 		add_role(
@@ -283,7 +282,6 @@ class Devhub_Handbooks {
 
 		return $label;
 	}
-
 } // Devhub_Handbooks
 
 Devhub_Handbooks::init();

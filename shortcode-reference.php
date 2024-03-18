@@ -1,9 +1,12 @@
 <?php
-//namespace DevHub;
+// namespace DevHub;
 
-add_action( 'init', function() {
-	add_shortcode( 'wporg_reference', 'wporg_reference_shortcode_content' );
-} );
+add_action(
+	'init',
+	function () {
+		add_shortcode( 'wporg_reference', 'wporg_reference_shortcode_content' );
+	}
+);
 /**
  * wporg_reference_shortcode_content
  *
@@ -23,7 +26,7 @@ function wporg_reference_shortcode_content( $atts ) {
 			$toc     = new \WPorg_Handbook_TOC(
 				get_parsed_post_types(),
 				array(
-					'header_text' => __( 'Contents', 'wporg' )
+					'header_text' => __( 'Contents', 'wporg' ),
 				)
 			);
 			$content = '<div class="content-toc">' . $toc->add_toc( $content ) . '</div>';

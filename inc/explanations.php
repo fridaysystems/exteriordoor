@@ -33,7 +33,7 @@ class WPORG_Explanations {
 	 * @access public
 	 * @var array
 	 */
-	public $screen_ids = [];
+	public $screen_ids = array();
 
 	/**
 	 * Constructor.
@@ -43,37 +43,37 @@ class WPORG_Explanations {
 	public function __construct() {
 		$this->post_types = DevHub\get_parsed_post_types();
 
-		$this->screen_ids = [ $this->exp_post_type, "edit-{$this->exp_post_type}" ];
+		$this->screen_ids = array( $this->exp_post_type, "edit-{$this->exp_post_type}" );
 
 		// Setup.
-		add_action( 'init',                    array( $this, 'register_post_type'     ), 0     );
-		add_action( 'init',                    array( $this, 'remove_editor_support'  ), 100   );
+		add_action( 'init', array( $this, 'register_post_type' ), 0 );
+		add_action( 'init', array( $this, 'remove_editor_support' ), 100 );
 
 		// Admin.
-		add_action( 'edit_form_after_title',   array( $this, 'post_to_expl_controls'  )        );
-		add_action( 'edit_form_top',           array( $this, 'expl_to_post_controls'  )        );
-		add_action( 'admin_bar_menu',          array( $this, 'toolbar_edit_link'      ), 100   );
-		add_action( 'admin_menu',              array( $this, 'admin_menu'             )        );
-		add_action( 'load-post-new.php',       array( $this, 'prevent_direct_creation')        );
+		add_action( 'edit_form_after_title', array( $this, 'post_to_expl_controls' ) );
+		add_action( 'edit_form_top', array( $this, 'expl_to_post_controls' ) );
+		add_action( 'admin_bar_menu', array( $this, 'toolbar_edit_link' ), 100 );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+		add_action( 'load-post-new.php', array( $this, 'prevent_direct_creation' ) );
 		// Add admin post listing column for explanations indicator.
-		add_filter( 'manage_posts_columns',       array( $this, 'add_post_column'     )        );
+		add_filter( 'manage_posts_columns', array( $this, 'add_post_column' ) );
 		// Output checkmark in explanations column if post has an explanation.
-		add_action( 'manage_posts_custom_column', array( $this, 'handle_column_data'  ), 10, 2 );
+		add_action( 'manage_posts_custom_column', array( $this, 'handle_column_data' ), 10, 2 );
 
-		add_filter( 'preview_post_link',       array ( $this, 'preview_post_link'     ), 10, 2 );
+		add_filter( 'preview_post_link', array( $this, 'preview_post_link' ), 10, 2 );
 
 		// Permissions.
-		add_action( 'after_switch_theme',      array( $this, 'add_roles'              )        );
-		add_filter( 'user_has_cap',            array( $this, 'grant_caps'             )        );
-		add_filter( 'post_row_actions',        array( $this, 'expl_row_action'        ), 10, 2 );
+		add_action( 'after_switch_theme', array( $this, 'add_roles' ) );
+		add_filter( 'user_has_cap', array( $this, 'grant_caps' ) );
+		add_filter( 'post_row_actions', array( $this, 'expl_row_action' ), 10, 2 );
 
 		// Script and styles.
 		add_filter( 'devhub-admin_enqueue_scripts', array( $this, 'admin_enqueue_base_scripts' ) );
-		add_action( 'admin_enqueue_scripts',   array( $this, 'admin_enqueue_scripts'  )        );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
 		// AJAX.
-		add_action( 'wp_ajax_new_explanation', array( $this, 'new_explanation'        )        );
-		add_action( 'wp_ajax_un_publish',      array( $this, 'un_publish_explanation' )        );
+		add_action( 'wp_ajax_new_explanation', array( $this, 'new_explanation' ) );
+		add_action( 'wp_ajax_un_publish', array( $this, 'un_publish_explanation' ) );
 	}
 
 	/**
@@ -82,31 +82,34 @@ class WPORG_Explanations {
 	 * @access public
 	 */
 	public function register_post_type() {
-		register_post_type( $this->exp_post_type, array(
-			'labels'            => array(
-				'name'                => __( 'Explanations', 'wporg' ),
-				'singular_name'       => __( 'Explanation', 'wporg' ),
-				'all_items'           => __( 'Explanations', 'wporg' ),
-				'edit_item'           => __( 'Edit Explanation', 'wporg' ),
-				'view_item'           => __( 'View Explanation', 'wporg' ),
-				'search_items'        => __( 'Search Explanations', 'wporg' ),
-				'not_found'           => __( 'No Explanations found', 'wporg' ),
-				'not_found_in_trash'  => __( 'No Explanations found in trash', 'wporg' ),
-			),
-			'public'            => false,
-			'publicly_queryable'=> true,
-			'hierarchical'      => false,
-			'show_ui'           => true,
-			'show_in_menu'      => true,
-			'menu_icon'         => 'dashicons-info',
-			'show_in_admin_bar' => false,
-			'show_in_nav_menus' => false,
-			'capability_type'   => 'explanation',
-			'map_meta_cap'      => true,
-			'supports'          => array( 'editor', 'revisions' ),
-			'rewrite'           => false,
-			'query_var'         => false,
-		) );
+		register_post_type(
+			$this->exp_post_type,
+			array(
+				'labels'             => array(
+					'name'               => __( 'Explanations', 'wporg' ),
+					'singular_name'      => __( 'Explanation', 'wporg' ),
+					'all_items'          => __( 'Explanations', 'wporg' ),
+					'edit_item'          => __( 'Edit Explanation', 'wporg' ),
+					'view_item'          => __( 'View Explanation', 'wporg' ),
+					'search_items'       => __( 'Search Explanations', 'wporg' ),
+					'not_found'          => __( 'No Explanations found', 'wporg' ),
+					'not_found_in_trash' => __( 'No Explanations found in trash', 'wporg' ),
+				),
+				'public'             => false,
+				'publicly_queryable' => true,
+				'hierarchical'       => false,
+				'show_ui'            => true,
+				'show_in_menu'       => true,
+				'menu_icon'          => 'dashicons-info',
+				'show_in_admin_bar'  => false,
+				'show_in_nav_menus'  => false,
+				'capability_type'    => 'explanation',
+				'map_meta_cap'       => true,
+				'supports'           => array( 'editor', 'revisions' ),
+				'rewrite'            => false,
+				'query_var'          => false,
+			)
+		);
 	}
 
 	/**
@@ -141,9 +144,9 @@ class WPORG_Explanations {
 		}
 
 		if ( false !== strpos( $preview_link, 'preview_nonce=' ) ) {
-			$url = parse_url( $preview_link );
+			$url       = parse_url( $preview_link );
 			$url_query = array();
-			parse_str ( $url['query'], $url_query );
+			parse_str( $url['query'], $url_query );
 
 			$preview_link = get_preview_post_link(
 				$post->post_parent,
@@ -175,7 +178,7 @@ class WPORG_Explanations {
 
 		// Add pending posts count.
 		$counts = wp_count_posts( $this->exp_post_type );
-		$count = $counts->pending;
+		$count  = $counts->pending;
 		if ( $count ) {
 			// Find the explanations menu item.
 			foreach ( $menu as $i => $item ) {
@@ -183,7 +186,7 @@ class WPORG_Explanations {
 					// Modify it to include the pending count.
 					$menu[ $i ][0] = sprintf(
 						__( 'Explanations %s', 'wporg' ),
-						"<span class='update-plugins count-{$count}'><span class='plugin-count'>" . number_format_i18n( $count ) . "</span></span>"
+						"<span class='update-plugins count-{$count}'><span class='plugin-count'>" . number_format_i18n( $count ) . '</span></span>'
 					);
 					break;
 				}
@@ -273,7 +276,8 @@ class WPORG_Explanations {
 				<div class="inside" style="padding-bottom:0;">
 					<strong><?php _e( 'Associated with: ', 'wporg' ); ?></strong>
 					<?php
-					printf( '<a href="%1$s">%2$s</a>',
+					printf(
+						'<a href="%1$s">%2$s</a>',
 						esc_url( get_permalink( $post->post_parent ) ),
 						str_replace( 'Explanation: ', '', get_the_title( $post->post_parent ) )
 					);
@@ -307,11 +311,13 @@ class WPORG_Explanations {
 			if ( is_user_member_of_blog() && current_user_can( 'edit_explanation', $explanation->ID ) ) {
 				$post_type = get_post_type_object( $this->exp_post_type );
 
-				$wp_admin_bar->add_menu( array(
-					'id'    => 'edit-explanation',
-					'title' => $post_type->labels->edit_item,
-					'href'  => get_edit_post_link( $explanation )
-				) );
+				$wp_admin_bar->add_menu(
+					array(
+						'id'    => 'edit-explanation',
+						'title' => $post_type->labels->edit_item,
+						'href'  => get_edit_post_link( $explanation ),
+					)
+				);
 			}
 		}
 	}
@@ -356,8 +362,10 @@ class WPORG_Explanations {
 		// Only grant explanation post type caps for admins, editors, and explanation editors.
 		if ( in_array( $role, array( 'administrator', 'editor', 'expl_editor' ) ) ) {
 			$base_caps = array(
-				'edit_explanations', 'edit_others_explanations',
-				'edit_published_explanations', 'edit_posts'
+				'edit_explanations',
+				'edit_others_explanations',
+				'edit_published_explanations',
+				'edit_posts',
 			);
 
 			foreach ( $base_caps as $cap ) {
@@ -366,9 +374,12 @@ class WPORG_Explanations {
 
 			$editor_caps = array(
 				'publish_explanations',
-				'delete_explanations', 'delete_others_explanations',
-				'delete_published_explanations', 'delete_private_explanations',
-				'edit_private_explanations', 'read_private_explanations'
+				'delete_explanations',
+				'delete_others_explanations',
+				'delete_published_explanations',
+				'delete_private_explanations',
+				'edit_private_explanations',
+				'read_private_explanations',
 			);
 
 			if ( ! empty( $caps['edit_pages'] ) ) {
@@ -404,13 +415,15 @@ class WPORG_Explanations {
 				return $actions;
 			}
 
-			$expl_action['edit-expl'] = sprintf( '<a href="%1$s" alt="%2$s">%3$s</a>',
+			$expl_action['edit-expl'] = sprintf(
+				'<a href="%1$s" alt="%2$s">%3$s</a>',
 				esc_url( get_edit_post_link( $expl->ID ) ),
 				esc_attr__( 'Edit Explanation', 'wporg' ),
 				__( 'Edit Explanation', 'wporg' )
 			);
 		} else {
-			$expl_action['add-expl'] = sprintf( '<a href="" class="create-expl" data-nonce="%1$s" data-id="%2$s">%3$s</a>',
+			$expl_action['add-expl'] = sprintf(
+				'<a href="" class="create-expl" data-nonce="%1$s" data-id="%2$s">%3$s</a>',
 				esc_attr( wp_create_nonce( 'create-expl' ) ),
 				esc_attr( $post->ID ),
 				__( 'Add Explanation', 'wporg' )
@@ -450,7 +463,7 @@ class WPORG_Explanations {
 					<?php _e( 'Add Explanation', 'wporg' ); ?>
 				</a><!-- #create-explanation -->
 			</span><!-- expl-row-actions -->
-		<?php
+			<?php
 		endif;
 	}
 
@@ -467,19 +480,19 @@ class WPORG_Explanations {
 			return '';
 		}
 
-		switch( $status = $post->post_status ) {
-			case 'draft' :
+		switch ( $status = $post->post_status ) {
+			case 'draft':
 				$label = __( 'Draft', 'wporg' );
 				break;
-			case 'pending' :
+			case 'pending':
 				$label = __( 'Pending Review', 'wporg' );
 				break;
-			case 'publish' :
+			case 'publish':
 				$label = __( 'Published', 'wporg' );
 				break;
-			default :
+			default:
 				$status = '';
-				$label = __( 'None', 'wporg' );
+				$label  = __( 'None', 'wporg' );
 				break;
 		}
 
@@ -495,7 +508,7 @@ class WPORG_Explanations {
 	 * @return bool True if admin.css should be enqueued, false otherwise.
 	 */
 	public function admin_enqueue_base_scripts( $do_enqueue ) {
-		return $do_enqueue || in_array( get_current_screen()->id, $this->screen_ids  );
+		return $do_enqueue || in_array( get_current_screen()->id, $this->screen_ids );
 	}
 
 	/**
@@ -507,20 +520,27 @@ class WPORG_Explanations {
 
 		$parsed_post_types_screen_ids = DevHub_Admin::get_parsed_post_types_screen_ids();
 
-		if ( in_array( get_current_screen()->id, array_merge(
+		if ( in_array(
+			get_current_screen()->id,
+			array_merge(
 				$parsed_post_types_screen_ids,
 				$this->screen_ids
-		) ) ) {
+			)
+		) ) {
 			wp_enqueue_script( 'wporg-explanations', get_stylesheet_directory_uri() . '/js/explanations.js', array( 'jquery', 'wp-util' ), '20160630', true );
 
-			wp_localize_script( 'wporg-explanations', 'wporg', array(
-				'editContentLabel' => __( 'Edit Explanation', 'wporg' ),
-				'statusLabel'      => array(
-					'draft'        => __( 'Draft', 'wporg' ),
-					'pending'      => __( 'Pending Review', 'wporg' ),
-					'publish'      => __( 'Published', 'wporg' ),
-				),
-			) );
+			wp_localize_script(
+				'wporg-explanations',
+				'wporg',
+				array(
+					'editContentLabel' => __( 'Edit Explanation', 'wporg' ),
+					'statusLabel'      => array(
+						'draft'   => __( 'Draft', 'wporg' ),
+						'pending' => __( 'Pending Review', 'wporg' ),
+						'publish' => __( 'Published', 'wporg' ),
+					),
+				)
+			);
 		}
 	}
 
@@ -540,25 +560,28 @@ class WPORG_Explanations {
 		} else {
 			$title = get_post_field( 'post_title', $post_id );
 
-			$explanation = wp_insert_post( array(
-				'post_type'   => 'wporg_explanations',
-				'post_title'  => "Explanation: $title",
-				'ping_status' => false,
-				'post_parent' => $post_id,
-			) );
+			$explanation = wp_insert_post(
+				array(
+					'post_type'   => 'wporg_explanations',
+					'post_title'  => "Explanation: $title",
+					'ping_status' => false,
+					'post_parent' => $post_id,
+				)
+			);
 
 			if ( ! is_wp_error( $explanation ) && 0 !== $explanation ) {
-				wp_send_json_success( array(
-					'post_id'   => $explanation,
-					'parent_id' => $post_id,
-					'context'   => $context
-				) );
+				wp_send_json_success(
+					array(
+						'post_id'   => $explanation,
+						'parent_id' => $post_id,
+						'context'   => $context,
+					)
+				);
 			} else {
 				wp_send_json_error(
 					new WP_Error( 'post_error', __( 'Explanation could not be created.', 'wporg' ) )
 				);
 			}
-
 		}
 	}
 
@@ -573,10 +596,12 @@ class WPORG_Explanations {
 		$post_id = empty( $_REQUEST['post_id'] ) ? 0 : absint( $_REQUEST['post_id'] );
 
 		if ( $explanation = get_explanation( $post_id ) ) {
-			$update = wp_update_post( array(
-				'ID'          => $explanation->ID,
-				'post_status' => 'draft'
-			) );
+			$update = wp_update_post(
+				array(
+					'ID'          => $explanation->ID,
+					'post_status' => 'draft',
+				)
+			);
 
 			if ( ! is_wp_error( $update ) && 0 !== $update ) {
 				wp_send_json_success( array( 'post_id' => $update ) );
@@ -604,11 +629,13 @@ class WPORG_Explanations {
 			$index = array_search( 'title', array_keys( $columns ) );
 			$pos   = false === $index ? count( $columns ) : $index + 1;
 
-			$col_data = [ 'has_explanation' => sprintf(
-				'<span class="dashicons dashicons-info" title="%s"></span><span class="screen-reader-text">%s</span>',
-				esc_attr__( 'Has explanation?', 'wporg' ),
-				esc_html__( 'Explanation?', 'wporg' )
-			) ];
+			$col_data = array(
+				'has_explanation' => sprintf(
+					'<span class="dashicons dashicons-info" title="%s"></span><span class="screen-reader-text">%s</span>',
+					esc_attr__( 'Has explanation?', 'wporg' ),
+					esc_html__( 'Explanation?', 'wporg' )
+				),
+			);
 			$columns  = array_merge( array_slice( $columns, 0, $pos ), $col_data, array_slice( $columns, $pos ) );
 		}
 
@@ -635,7 +662,6 @@ class WPORG_Explanations {
 			}
 		}
 	}
-
 }
 
 $explanations = new WPORG_Explanations();

@@ -24,8 +24,8 @@ class DevHub_Search {
 		add_action( 'pre_get_posts', array( __CLASS__, 'invalid_post_type_filter_404' ), 9 );
 		add_action( 'pre_get_posts', array( __CLASS__, 'pre_get_posts' ), 20 );
 		add_filter( 'posts_orderby', array( __CLASS__, 'search_posts_orderby' ), 10, 2 );
-		add_filter( 'the_posts',     array( __CLASS__, 'redirect_empty_search' ), 10, 2 );
-		add_filter( 'the_posts',     array( __CLASS__, 'rerun_search_without_results' ), 10, 2 );
+		add_filter( 'the_posts', array( __CLASS__, 'redirect_empty_search' ), 10, 2 );
+		add_filter( 'the_posts', array( __CLASS__, 'rerun_search_without_results' ), 10, 2 );
 
 		add_filter( 'wporg_noindex_request', array( __CLASS__, 'noindex_query' ) );
 	}
@@ -34,7 +34,7 @@ class DevHub_Search {
 	 * Noindex post_type-filtered results.
 	 */
 	public static function noindex_query( $noindex ) {
-		if ( isset( $_GET[ 'post_type' ] ) ) {
+		if ( isset( $_GET['post_type'] ) ) {
 			$noindex = true;
 		}
 
@@ -74,8 +74,8 @@ class DevHub_Search {
 
 		// Commented out by Corey 2024/01/04. Trying to get the Shortcodes page to show up in a search for Shortcode.
 		// Order search result in ascending order by title.
-		//$query->set( 'orderby', 'title' );
-		//$query->set( 'order', 'ASC' );
+		// $query->set( 'orderby', 'title' );
+		// $query->set( 'order', 'ASC' );
 
 		// Separates searches for handbook pages from non-handbook pages depending on
 		// whether the search was performed within context of a handbook page or not.
@@ -88,9 +88,9 @@ class DevHub_Search {
 			$s = htmlentities( $query->get( 's' ) );
 			if ( '()' === substr( $s, -2 ) ) {
 				// Enable exact search.
-				$query->set( 'exact',     true );
+				$query->set( 'exact', true );
 				// Modify the search query to omit the parentheses.
-				$query->set( 's',         substr( $s, 0, -2 ) ); // remove '()'
+				$query->set( 's', substr( $s, 0, -2 ) ); // remove '()'
 				// Restrict search to function-like content.
 				$query->set( 'post_type', array( 'wp-parser-function', 'wp-parser-method' ) );
 			}
@@ -107,7 +107,7 @@ class DevHub_Search {
 			// Commented out by Corey 2024/01/04. Trying to get the Shortcodes page to show up in a search for Shortcode.
 			// Not a handbook page, or exact search, or filters used.
 			// Fallback to parsed post types.
-			//$query->set( 'post_type', DevHub\get_parsed_post_types() );
+			// $query->set( 'post_type', DevHub\get_parsed_post_types() );
 		}
 	}
 
@@ -150,7 +150,7 @@ class DevHub_Search {
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
-	 * @param array   $q Query variables.
+	 * @param array $q Query variables.
 	 * @return string ORDER BY clause.
 	 */
 	public static function parse_search_order( $q ) {
@@ -170,8 +170,8 @@ class DevHub_Search {
 			// Sentence match in 'post_title'.
 			if ( $like ) {
 				$search_orderby .= $wpdb->prepare( "WHEN $wpdb->posts.post_title LIKE %s THEN 1 ", $like );
-				$_like =  str_replace( '-', '_', sanitize_title_with_dashes( $q['s'] ) );
-				$_like = '%' . $wpdb->esc_like( $_like ) . '%';
+				$_like           = str_replace( '-', '_', sanitize_title_with_dashes( $q['s'] ) );
+				$_like           = '%' . $wpdb->esc_like( $_like ) . '%';
 				if ( $_like !== $like ) {
 					// Sentence match in 'post_title' with spaces replaced with underscores.
 					$search_orderby .= $wpdb->prepare( "WHEN $wpdb->posts.post_title LIKE %s THEN 2 ", $_like );
@@ -184,8 +184,9 @@ class DevHub_Search {
 				// all words in title
 				$search_orderby .= 'WHEN ' . implode( ' AND ', $q['search_orderby_title'] ) . ' THEN 3 ';
 				// any word in title, not needed when $num_terms == 1
-				if ( $num_terms > 1 )
+				if ( $num_terms > 1 ) {
 					$search_orderby .= 'WHEN ' . implode( ' OR ', $q['search_orderby_title'] ) . ' THEN 4 ';
+				}
 			}
 
 			// Sentence match in 'post_content'.
@@ -212,7 +213,6 @@ class DevHub_Search {
 	 * @param  array    $posts Array of posts after the main query
 	 * @param  WP_Query $query WP_Query object
 	 * @return array
-	 *
 	 */
 	public static function redirect_empty_search( $posts, $query ) {
 		$redirect = '';
@@ -272,7 +272,7 @@ class DevHub_Search {
 				$query->set( 'exact', false );
 				$posts = $query->get_posts();
 			}
-			
+
 			// Retry HTML entity convertible search term after such a conversion.
 			elseif ( $s != ( $she = htmlentities( $s ) ) ) {
 				$query->set( 's', $she );
@@ -282,7 +282,6 @@ class DevHub_Search {
 
 		return $posts;
 	}
-
 } // DevHub_Search
 
 DevHub_Search::init();

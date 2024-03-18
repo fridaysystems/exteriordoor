@@ -9,13 +9,13 @@
 
 h2.wp-block-heading,
 h3.wp-block-heading{
-   margin-block-start: 1.75em;
+	margin-block-start: 1.75em;
 }
 
 /* Bug fix, see https://wordpress.org/support/topic/wp-6-2-gutenberg-ul-has-background-sometimes-appears-and-sometimes-doesnt/ */
 ol.has-background, ul.has-background {
-    padding: 0 !important;
-}  
+	padding: 0 !important;
+}
 
 /* Slant top below header on home page, .page-id-6576 */
 body.home main::before{
@@ -32,7 +32,7 @@ body.home main::before{
 }
 @media (max-width:800px){
 	body.home main::before{
-		bottom: 72px;	
+		bottom: 72px;
 		border-width: 0 0 50px 100vw;
 	}
 }
@@ -49,7 +49,7 @@ span.wp-block-cover__background.has-base-2-background-color{
 .home main{
 	background: var(--wp--preset--color--base);
 	margin-block-start: 0;
-}  
+}
 
 /* Slants for FAQ section on home page */
 /* Slant FAQ top */
@@ -68,14 +68,14 @@ span.wp-block-cover__background.has-base-2-background-color{
 @media (max-width:1300px){
 	.group-faq::before{
 		left: -70px;
-		bottom: 172px;	
+		bottom: 172px;
 		border-width: 0 0 150px 100vw;
 	}
 }
 @media (max-width:800px){
 	.group-faq::before{
 		left: -60px;
-		bottom: 172px;	
+		bottom: 172px;
 		border-width: 0 0 150px 105vw;
 	}
 }
@@ -127,7 +127,7 @@ footer::before{
 }
 @media (max-width:1480px){
 	footer::before{
-		bottom: 47px;	
+		bottom: 47px;
 		border-width: 0 0 50px 100vw;
 	}
 	footer > div > div{
@@ -146,7 +146,7 @@ footer::before{
 }
 .wp-block-table td,
 .wp-block-table th{
-  	border-color: var(--wp--preset--color--accent);
+	border-color: var(--wp--preset--color--accent);
 }
 
 /* Easy Digital Downloads */
@@ -197,19 +197,19 @@ form#edd_profile_editor_form fieldset#edd_profile_submit_fieldset{
 #edd_purchase_submit,
 #edd_checkout_form_wrap fieldset#edd_sl_renewal_fields,
 #edd_discount_code {
-  border: none;
+	border: none;
 }
 /* Don't stack the order line items and subtotals so tightly */
 tr.edd_cart_item,
 #edd-save-cart-button{
-  line-height: 5em;
+	line-height: 5em;
 }
 .edd_cart_footer_row{
-  line-height: 2em;
+	line-height: 2em;
 }
 /* Hide visa mastercard etc logos */
 .edd-payment-icons{
-  display: none;
+	display: none;
 }
 /* Don't show a big checkmark after adding something to the cart */
 .edd-cart-added-alert .edd-icon-check {

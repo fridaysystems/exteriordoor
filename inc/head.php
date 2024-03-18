@@ -21,9 +21,9 @@ class DevHub_Head {
 	 * Handles adding/removing hooks as needed.
 	 */
 	public static function do_init() {
-		add_filter( 'document_title_parts',     array( __CLASS__, 'document_title' ) );
+		add_filter( 'document_title_parts', array( __CLASS__, 'document_title' ) );
 		add_filter( 'document_title_separator', array( __CLASS__, 'document_title_separator' ) );
-		add_action( 'wp_head',                  array( __CLASS__, 'output_head_tags' ), 2 );
+		add_action( 'wp_head', array( __CLASS__, 'output_head_tags' ), 2 );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class DevHub_Head {
 		}
 
 		$title = $parts['title'];
-		$sep = '|';
+		$sep   = '|';
 
 		$post_type = get_query_var( 'post_type' );
 
@@ -58,12 +58,12 @@ class DevHub_Head {
 		elseif ( ( is_singular() || is_post_type_archive() ) && false !== strpos( $post_type, 'handbook' ) ) {
 			if ( $post_type_object = get_post_type_object( $post_type ) ) {
 				$handbook_label = get_post_type_object( $post_type )->labels->name;
-				$handbook_name  = \WPorg_Handbook::get_name( $post_type ) . " Handbook";
+				$handbook_name  = \WPorg_Handbook::get_name( $post_type ) . ' Handbook';
 
 				// Replace title with handbook name if this is landing page for the handbook
 				if ( $title == $handbook_label ) {
 					$title = $handbook_name;
-				// Otherwise, append the handbook name
+					// Otherwise, append the handbook name
 				} else {
 					$title .= " $sep " . $handbook_name;
 				}
@@ -98,36 +98,32 @@ class DevHub_Head {
 	 * Outputs tags for the page head.
 	 */
 	public static function output_head_tags() {
-		$fields = [
+		$fields = array(
 			// FYI: 'description' and 'og:description' are set further down.
-			'og:title'       => wp_get_document_title(),
-			'og:site_name'   => get_bloginfo( 'name' ),
-			'og:type'        => 'website',
-			'og:url'         => home_url( '/' ),
-			'twitter:card'   => 'summary_large_image',
-			'twitter:site'   => '@WordPress',
-		];
+			'og:title'     => wp_get_document_title(),
+			'og:site_name' => get_bloginfo( 'name' ),
+			'og:type'      => 'website',
+			'og:url'       => home_url( '/' ),
+			'twitter:card' => 'summary_large_image',
+			'twitter:site' => '@WordPress',
+		);
 
 		$desc = '';
 
 		// Customize description and any other tags.
 		if ( is_front_page() ) {
 			$desc = __( 'Official WordPress developer resources including a code reference, handbooks (for APIs, plugin and theme development, block editor), and more.', 'wporg' );
-		}
-		elseif ( is_page( 'reference' ) ) {
+		} elseif ( is_page( 'reference' ) ) {
 			$desc = __( 'Want to know what&#8217;s going on inside WordPress? Find out more information about its functions, classes, methods, and hooks.', 'wporg' );
-		}
-		elseif ( DevHub\is_parsed_post_type() ) {
+		} elseif ( DevHub\is_parsed_post_type() ) {
 			if ( is_singular() ) {
 				$desc = get_summary();
-			}
-			elseif ( is_post_type_archive() ) {
+			} elseif ( is_post_type_archive() ) {
 				$post_type_items = get_post_type_object( get_post_type() )->labels->all_items;
 				/* translators: %s: translated label for all items of a post type. */
 				$desc = sprintf( __( 'Code Reference archive for WordPress %s.', 'wporg' ), strtolower( $post_type_items ) );
 			}
-		}
-		elseif ( is_singular() ) {
+		} elseif ( is_singular() ) {
 			$post = get_queried_object();
 			$desc = $post->post_content;
 		}
@@ -141,7 +137,7 @@ class DevHub_Head {
 			// Trim down to <150 characters based on full words.
 			if ( strlen( $desc ) > 150 ) {
 				$truncated = '';
-				$words = preg_split( "/[\n\r\t ]+/", $desc, -1, PREG_SPLIT_NO_EMPTY );
+				$words     = preg_split( "/[\n\r\t ]+/", $desc, -1, PREG_SPLIT_NO_EMPTY );
 
 				while ( $words ) {
 					$word = array_shift( $words );
@@ -161,8 +157,8 @@ class DevHub_Head {
 				$desc = $truncated;
 			}
 
-			$fields[ 'description' ]   = $desc;
-			$fields[ 'og:description'] = $desc;
+			$fields['description']    = $desc;
+			$fields['og:description'] = $desc;
 		}
 
 		// Output fields.
@@ -176,8 +172,6 @@ class DevHub_Head {
 			);
 		}
 	}
-
 } // DevHub_Head
 
 DevHub_Head::init();
-

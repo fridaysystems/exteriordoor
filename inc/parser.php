@@ -11,7 +11,7 @@
 class DevHub_Parser {
 
 	// Files and directories to skip from parsing.
-	const SKIP_FROM_PARSING = [
+	const SKIP_FROM_PARSING = array(
 		'wp-admin/css/',
 		'wp-admin/includes/class-ftp',
 		'wp-admin/includes/class-pclzip.php',
@@ -35,14 +35,14 @@ class DevHub_Parser {
 		'wp-includes/js/',
 		'wp-includes/random_compat/',
 		'wp-includes/sodium_compat/',
-	];
+	);
 
 
 	/**
 	 * Initializer.
 	 */
 	public static function init() {
-		add_action( 'init', [ __CLASS__, 'do_init' ] );
+		add_action( 'init', array( __CLASS__, 'do_init' ) );
 	}
 
 	/**
@@ -53,7 +53,7 @@ class DevHub_Parser {
 		add_filter( 'wp_parser_skip_duplicate_hooks', '__return_true' );
 
 		// Skip parsing of certain files.
-		add_filter( 'wp_parser_pre_import_file',      [ __CLASS__, 'should_file_be_imported' ], 10, 2 );
+		add_filter( 'wp_parser_pre_import_file', array( __CLASS__, 'should_file_be_imported' ), 10, 2 );
 	}
 
 	/**
@@ -98,7 +98,13 @@ class DevHub_Parser {
 		}
 
 		foreach ( \DevHub\get_post_types_with_source_code() as $post_type ) {
-			$posts = get_posts( array( 'fields' => 'ids', 'post_type' => $post_type, 'posts_per_page' => '-1' ) );
+			$posts = get_posts(
+				array(
+					'fields'         => 'ids',
+					'post_type'      => $post_type,
+					'posts_per_page' => '-1',
+				)
+			);
 			foreach ( $posts as $post ) {
 				echo '.';
 				\DevHub\get_source_code( $post, true );
@@ -108,7 +114,6 @@ class DevHub_Parser {
 
 		return true;
 	}
-
 } // DevHub_Parser
 
 DevHub_Parser::init();

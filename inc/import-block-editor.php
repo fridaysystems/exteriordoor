@@ -13,25 +13,33 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 			$manifest
 		);
 
-		add_filter( 'template_redirect',               array( $this, 'redirects' ), 1 );
+		add_filter( 'template_redirect', array( $this, 'redirects' ), 1 );
 		add_filter( 'handbook_label', array( $this, 'change_handbook_label' ), 10, 2 );
-		add_filter( 'handbook_display_toc',            array( $this, 'disable_toc' ) );
-		add_filter( 'get_post_metadata',               array( $this, 'fix_markdown_source_meta' ), 10, 4 );
-		add_filter( 'wporg_markdown_before_transform', array( $this, 'wporg_markdown_before_transform' ),  10, 2 );
-		add_filter( 'wporg_markdown_after_transform',  array( $this, 'wporg_markdown_after_transform' ), 10, 2 );
-		add_filter( 'wporg_markdown_edit_link',        array( $this, 'wporg_markdown_edit_link' ), 10, 2 );
+		add_filter( 'handbook_display_toc', array( $this, 'disable_toc' ) );
+		add_filter( 'get_post_metadata', array( $this, 'fix_markdown_source_meta' ), 10, 4 );
+		add_filter( 'wporg_markdown_before_transform', array( $this, 'wporg_markdown_before_transform' ), 10, 2 );
+		add_filter( 'wporg_markdown_after_transform', array( $this, 'wporg_markdown_after_transform' ), 10, 2 );
+		add_filter( 'wporg_markdown_edit_link', array( $this, 'wporg_markdown_edit_link' ), 10, 2 );
 
-		add_filter( 'syntaxhighlighter_htmlresult',    array( $this, 'fix_code_entity_encoding' ) );
+		add_filter( 'syntaxhighlighter_htmlresult', array( $this, 'fix_code_entity_encoding' ) );
 
-		add_action( 'pre_post_update', function( $post_id, $data ) {
-			if ( $this->get_post_type() === $data['post_type'] ) {
-				add_filter( 'wp_kses_allowed_html', array( __CLASS__, 'allow_extra_tags' ), 10, 1 );
+		add_action(
+			'pre_post_update',
+			function ( $post_id, $data ) {
+				if ( $this->get_post_type() === $data['post_type'] ) {
+					add_filter( 'wp_kses_allowed_html', array( __CLASS__, 'allow_extra_tags' ), 10, 1 );
+				}
+			},
+			10,
+			2
+		);
+
+		add_action(
+			'edit_post_' . $this->get_post_type(),
+			function ( $post_id ) {
+				remove_filter( 'wp_kses_allowed_html', array( __CLASS__, 'allow_extra_tags' ), 10, 1 );
 			}
-		}, 10, 2 );
-
-		add_action( 'edit_post_' . $this->get_post_type(), function( $post_id ) {
-			remove_filter( 'wp_kses_allowed_html', array( __CLASS__, 'allow_extra_tags' ), 10, 1 );
-		} );
+		);
 	}
 
 	/**
@@ -42,23 +50,23 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 			return;
 		}
 
-	    $handbook_path = explode( '/', trailingslashit( $_SERVER['REQUEST_URI'] ), 3 );
-	    $handbook_path = $handbook_path[2] ?? null;
+		$handbook_path = explode( '/', trailingslashit( $_SERVER['REQUEST_URI'] ), 3 );
+		$handbook_path = $handbook_path[2] ?? null;
 
 		if ( is_null( $handbook_path ) ) {
 			return;
 		}
 
 		// Any handbook pages where the slug changes should be listed here.
-		$redirects = [
+		$redirects = array(
 			'tutorials/block-tutorial/block-controls-toolbars-and-inspector' => 'tutorials/block-tutorial/block-controls-toolbar-and-sidebar/',
 			'components/server-side-render' => 'packages/packages-server-side-render',
-		];
+		);
 
 		// General path redirects. (More specific path first.)
-		$path_redirects = [
+		$path_redirects = array(
 			// 'some-path/' => 'new-path/',
-		];
+		);
 
 		$new_handbook_path = '';
 		if ( ! empty( $redirects[ untrailingslashit( $handbook_path ) ] ) ) {
@@ -125,7 +133,7 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 		if ( false !== mb_strpos( $content, '&amp;' ) ) {
 			$content = preg_replace_callback(
 				'|(<pre class="brush[^>]+)(.+)(</pre)|Us',
-				function( $matches ) {
+				function ( $matches ) {
 					return $matches[1] . html_entity_decode( $matches[2], ENT_QUOTES | ENT_HTML401 ) . $matches[3];
 				},
 				$content
@@ -142,7 +150,7 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 	 *
 	 * @param mixed  $null      A value for the meta if its data retrieval is
 	 *                          overridden, else null.
-	 * @param int	 $object_id Object ID.
+	 * @param int    $object_id Object ID.
 	 * @param string $meta_key  Meta key.
 	 * @param bool   $single    Whether to return only the first value of the specified $meta_key.
 	 * @return mixed
@@ -188,7 +196,7 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 			} else {
 				$value = array_map( 'maybe_unserialize', $meta_cache[ $meta_key ] );
 				$value = array_map(
-					function( $x ) {
+					function ( $x ) {
 						return str_replace( 'https://raw.githubusercontent.com/WordPress/gutenberg/', 'https://github.com/WordPress/gutenberg/edit/', $x );
 					},
 					$value
@@ -307,19 +315,19 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 	public static function parse_code_blocks( $matches ) {
 		$splitted_tabs = preg_split( '/{%\s+([\w]+)\s+%}/', trim( $matches[1] ), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE );
 
-		$html = '<div class="code-tabs">';
+		$html        = '<div class="code-tabs">';
 		$code_blocks = '';
 
 		for ( $ii = 0; $ii < count( $splitted_tabs ); $ii += 2 ) {
-			$classes = 'code-tab ' . $splitted_tabs[ $ii ];
+			$classes      = 'code-tab ' . $splitted_tabs[ $ii ];
 			$code_classes = 'code-tab-block ' . $splitted_tabs[ $ii ];
 
 			if ( 0 === $ii ) {
-				$classes .= ' is-active';
+				$classes      .= ' is-active';
 				$code_classes .= ' is-active';
 			}
 
-			$html .= "<button data-language='{$splitted_tabs[ $ii ]}' class='$classes'>{$splitted_tabs[ $ii ]}</button>";
+			$html        .= "<button data-language='{$splitted_tabs[ $ii ]}' class='$classes'>{$splitted_tabs[ $ii ]}</button>";
 			$code_blocks .= "<div class='$code_classes'>{$splitted_tabs[ $ii + 1 ]}</div>";
 		}
 
@@ -336,12 +344,11 @@ class DevHub_Block_Editor_Importer extends DevHub_Docs_Importer {
 	 */
 	public static function allow_extra_tags( $tags ) {
 		if ( ! isset( $tags['style'] ) ) {
-			$tags['style'] = [];
+			$tags['style'] = array();
 		}
 
 		return $tags;
 	}
-
 }
 
 DevHub_Block_Editor_Importer::instance()->init();

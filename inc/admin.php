@@ -14,23 +14,23 @@ class DevHub_Admin {
 	 * Initializer.
 	 */
 	public static function init() {
-		add_action( 'admin_init', [ __CLASS__, 'do_init' ] );
+		add_action( 'admin_init', array( __CLASS__, 'do_init' ) );
 	}
 
 	/**
 	 * Handles adding/removing hooks.
 	 */
 	public static function do_init() {
-		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
-	
-		add_action( 'comment_author', [ __CLASS__, 'append_user_nicename' ], 10, 2 );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
+
+		add_action( 'comment_author', array( __CLASS__, 'append_user_nicename' ), 10, 2 );
 
 		if ( class_exists( 'DevHub_User_Contributed_Notes_Voting' ) ) {
 			// Add a reset votes checkbox to the comment submit metabox.
-			add_filter( 'edit_comment_misc_actions', [ __CLASS__, 'add_reset_votes_form_field' ], 10, 2 );
+			add_filter( 'edit_comment_misc_actions', array( __CLASS__, 'add_reset_votes_form_field' ), 10, 2 );
 
 			// Reset votes after editing a comment in the wp-admin.
-			add_filter( 'comment_edit_redirect',  [ __CLASS__, 'comment_edit_redirect'], 10, 2 );
+			add_filter( 'comment_edit_redirect', array( __CLASS__, 'comment_edit_redirect' ), 10, 2 );
 		}
 	}
 
@@ -42,7 +42,7 @@ class DevHub_Admin {
 	 * @return array
 	 */
 	public static function get_parsed_post_types_screen_ids() {
-		$screen_ids = [];
+		$screen_ids = array();
 		foreach ( DevHub\get_parsed_post_types() as $parsed_post_type ) {
 			$screen_ids[] = $parsed_post_type;
 			$screen_ids[] = "edit-{$parsed_post_type}";
@@ -66,7 +66,7 @@ class DevHub_Admin {
 		 * @param bool True if admin.css should be enqueued, false otherwise.
 		 */
 		if ( (bool) apply_filters( 'devhub-admin_enqueue_scripts', in_array( get_current_screen()->id, $screen_ids ) ) ) {
-			wp_enqueue_style( 'wporg-admin', get_stylesheet_directory_uri() . '/stylesheets/admin.css', [], '20181101' );
+			wp_enqueue_style( 'wporg-admin', get_stylesheet_directory_uri() . '/stylesheets/admin.css', array(), '20181101' );
 		}
 	}
 
@@ -84,7 +84,7 @@ class DevHub_Admin {
 
 		if ( $comment->user_id ) {
 			$username = get_user_by( 'id', $comment->user_id )->user_nicename;
-	
+
 			$author_name .= '</strong><div class="comment-author-nicename">@' . $username . '</div><strong>';
 		}
 
@@ -127,7 +127,6 @@ class DevHub_Admin {
 
 		return $location;
 	}
-
 } // DevHub_Admin
 
 DevHub_Admin::init();
