@@ -1,8 +1,3 @@
-/* Width of the source code will often cause a horizontal scroll bar */
-body.single-wp-parser{
-	overflow-x: hidden;
-}
-
 body,
 button,
 input,

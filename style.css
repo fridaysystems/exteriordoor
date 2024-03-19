@@ -5,7 +5,12 @@
  * Author URI: https://github.com/csalzano
  * Theme URI: https://github.com/fridaysystems/exteriordoor
  * Template: twentytwentyfour
+ * Version 1.0.0
  */
+body{
+	overflow-x: hidden;
+}
+
 main :where(body .is-layout-flex) {
 	gap: 0;
 }
@@ -61,7 +66,7 @@ span.wp-block-cover__background.has-base-2-background-color{
 	width: 0;
 	height: 0;
 	left: -103px;
-	bottom: 273px;
+	bottom: 270px;
 	position: relative;
 	border-style: solid;
 	border-width: 0 0 250px 100vw;
@@ -159,7 +164,7 @@ table#used-by-table td,
 }
 
 /* wp-parser related uses tables */
-/* EDD Purchase History page purchases table */
+/* EDD cart, Purchase History page purchases table */
 .edd-table,
 table#uses-table,
 table#used-by-table {
@@ -181,6 +186,13 @@ table#used-by-table td {
 .edd-table#edd_sl_license_keys,
 form#edd_sl_license_add_site_form,{
 	margin-bottom: 15em;
+}
+
+td.edd_cart_item_price{
+	text-align: right;
+}
+td.edd_cart_actions{
+	text-align: center;
 }
 
 form#edd_profile_editor_form legend{
