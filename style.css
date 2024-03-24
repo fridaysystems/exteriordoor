@@ -5,7 +5,7 @@
  * Author URI: https://github.com/csalzano
  * Theme URI: https://github.com/fridaysystems/exteriordoor
  * Template: twentytwentyfour
- * Version 1.0.0
+ * Version 1.0.3
  */
 body{
 	overflow-x: hidden;
@@ -23,6 +23,39 @@ h3.wp-block-heading{
 /* Bug fix, see https://wordpress.org/support/topic/wp-6-2-gutenberg-ul-has-background-sometimes-appears-and-sometimes-doesnt/ */
 ol.has-background, ul.has-background {
 	padding: 0 !important;
+}
+
+
+@media (max-width:600px){
+	/* Header on mobile */
+	/* Hide social icons on mobile */
+	.header-col-wrap {
+		max-width: 90%;
+		margin: 0 auto;
+	}
+	body .is-layout-flex.wp-block-social-links{
+		display: none;
+	}
+	.wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column.header-col-logo{
+		flex-basis: 84% !important;
+	}
+	.wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column.header-col-nav{
+		flex-basis: 5% !important;
+		padding-right: 1em
+	}
+	/* Header on mobile end*/
+
+	/* Button padding on mobile */
+	.wp-block-button .wp-block-button__link,
+	a.edd_go_to_checkout,
+	a.edd_cart_remove_item_btn,
+	a#edd-save-cart-button,
+	button#edd_sl_show_renewal_form,
+	#edd-purchase-button.button,
+	.gform_button.button{
+		padding-left: 1.2em;
+		padding-right: 1.2em;
+	}
 }
 
 /* Slant top below header on home page, .page-id-6576 */
