@@ -169,17 +169,6 @@ class DevHub_User_Submitted_Content {
 			wp_enqueue_script( 'wporg-developer-function-reference', get_stylesheet_directory_uri() . '/js/function-reference.js', array( 'jquery', 'syntaxhighlighter-core', 'syntaxhighlighter-brush-php' ), '20180724', true );
 			wp_enqueue_style( 'syntaxhighlighter-core' );
 			wp_enqueue_style( 'syntaxhighlighter-theme-default' );
-
-			wp_enqueue_script( 'wporg-developer-user-notes', get_stylesheet_directory_uri() . '/js/user-notes.js', array( 'jquery', 'quicktags' ), '20200110', true );
-			wp_enqueue_script( 'wporg-developer-user-notes-feedback', get_stylesheet_directory_uri() . '/js/user-notes-feedback.js', array( 'jquery', 'quicktags' ), '20181023', true );
-			wp_localize_script(
-				'wporg-developer-user-notes-feedback',
-				'wporg_note_feedback',
-				array(
-					'show' => __( 'Show Feedback', 'wporg' ),
-					'hide' => __( 'Hide Feedback', 'wporg' ),
-				)
-			);
 		}
 	}
 
