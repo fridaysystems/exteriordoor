@@ -5,7 +5,7 @@
  * Author URI: https://github.com/csalzano
  * Theme URI: https://github.com/fridaysystems/exteriordoor
  * Template: twentytwentyfour
- * Version 1.0.3
+ * Version 1.0.4
  */
 body{
 	overflow-x: hidden;
@@ -397,6 +397,23 @@ a#edd-save-cart-button {
 }
 .edd_download_purchase_form  .edd_price_options li {
 	line-height: 200%;
+}
+
+/* EDD Create account field inputs */
+#edd_checkout_user_info .edd-description,
+#edd_checkout_login_register .edd-description,
+#edd_cc_address .edd-description,
+#edd_cc_fields .edd-description{
+	display: none;
+}
+#edd_checkout_user_info label,
+#edd_checkout_login_register label{
+	display: inline-block;
+	width: 130px;
+}
+#edd_cc_address label{
+	display: inline-block;
+	width: 250px;
 }
 
 /* Plugins page packages/bundles section */
