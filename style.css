@@ -5,7 +5,7 @@
  * Author URI: https://github.com/csalzano
  * Theme URI: https://github.com/fridaysystems/exteriordoor
  * Template: twentytwentyfour
- * Version 1.0.4
+ * Version 1.0.5
  */
 body{
 	overflow-x: hidden;
@@ -28,6 +28,10 @@ ol.has-background, ul.has-background {
 
 @media (max-width:600px){
 	/* Header on mobile */
+	/* Gap between icon and logo */
+	.header-col-logo .wp-block-group{
+		gap: .6rem;
+	}
 	/* Hide social icons on mobile */
 	.header-col-wrap {
 		max-width: 90%;
@@ -122,8 +126,8 @@ span.wp-block-cover__background.has-base-2-background-color{
 }
 @media (max-width:460px){
 	.group-faq::before{
-		left: -40px;
-		bottom: 97px;
+		left: -28px;
+		bottom: 95px;
 		border-width: 0 0 75px 100vw;
 	}
 }
@@ -143,13 +147,13 @@ span.wp-block-cover__background.has-base-2-background-color{
 @media (max-width:1060px){
 	.group-faq::after{
 		left: -60px;
-		bottom: 47px;
+		bottom: 45px;
 		border-width: 0 0 50px 100vw;
 	}
 }
 @media (max-width:600px){
 	.group-faq::after{
-		left: -50px;
+		left: -28px;
 	}
 }
 
@@ -179,6 +183,14 @@ footer::before{
 .wp-block-spacer.last-spacer{
 	margin-block-start: 0;
 	background-color: var(--wp--preset--color--base);
+}
+
+/* Three features on home page */
+.three-features .wp-block-column .wp-block-group{
+	padding: 4em 2em;
+}
+.three-features .wp-block-column ol{
+	margin-block-start: 1.2rem;
 }
 
 /* Tables */
