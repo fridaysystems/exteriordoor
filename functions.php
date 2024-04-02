@@ -64,3 +64,17 @@ require_once 'shortcode-wporg-post-type-or-taxonomy-description.php';
 require_once 'shortcode-wporg-file.php';
 require_once 'shortcode-wporg-reference.php';
 require_once 'shortcode-breadcrumb-trail.php';
+
+// Remove a few post types.
+add_filter( 'handbook_post_types', 'invp_remove_handbook_post_types', 11 );
+/**
+ * invp_remove_handbook_post_types
+ *
+ * @param  mixed $post_types
+ * @return void
+ */
+function invp_remove_handbook_post_types( $post_types ) {
+	unset( $post_types[1] );
+	unset( $post_types[2] );
+	return $post_types;
+}
