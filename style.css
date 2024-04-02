@@ -427,6 +427,13 @@ a#edd-save-cart-button {
 	display: inline-block;
 	width: 250px;
 }
+/* EDD radio buttons for ( ) Credit Card  ( ) Paypal */
+#edd-payment-mode-wrap label{
+	padding-right: 1em;
+}
+#edd-payment-mode-wrap label input {
+	margin-right: .5em;
+}
 
 /* Plugins page packages/bundles section */
 .group-full-width .edd_purchase_submit_wrapper{
