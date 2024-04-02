@@ -24,7 +24,7 @@ function exteriordoor_styles() {
 }
 
 /**
- * change_view_on_trac_link
+ * Changes "View on Trac" to "View on Github".
  *
  * @param  mixed $text
  * @return void
