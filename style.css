@@ -5,7 +5,7 @@
  * Author URI: https://github.com/csalzano
  * Theme URI: https://github.com/fridaysystems/exteriordoor
  * Template: twentytwentyfour
- * Version 1.0.6
+ * Version: 1.0.7
  */
 body{
 	overflow-x: hidden;
@@ -283,6 +283,28 @@ tr.edd_cart_item,
 .edd-payment-icons{
 	display: none;
 }
+
+/* Select Payment Method */
+fieldset#edd_payment_mode_select,
+fieldset#edd_checkout_user_info,
+fieldset#edd_cc{
+	border: none;
+	padding: 1em 0 2em;
+}
+fieldset#edd_payment_mode_select legend,
+fieldset#edd_checkout_user_info legend,
+fieldset#edd_cc legend{
+	font-size: 200%;
+	font-weight: bold;
+}
+/* Credit Card, PayPal radios */
+#edd-payment-mode-wrap,
+#edd-email-wrap,
+#edd-first-name-wrap,
+#edd-last-name-wrap{
+	padding-left: 1em;
+}
+
 /* Don't show a big checkmark after adding something to the cart */
 .edd-cart-added-alert .edd-icon-check {
 	display: none;
