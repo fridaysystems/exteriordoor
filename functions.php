@@ -78,3 +78,29 @@ function invp_remove_handbook_post_types( $post_types ) {
 	unset( $post_types[2] );
 	return $post_types;
 }
+
+/**
+ * Add a 250px spacer to the Easy Digital Downloads Software Licensing UI. This
+ * affects the Purchase History page when users press View Licenses or Manage
+ * Sites.
+ *
+ * @param string $content The post content.
+ * @return string
+ */
+function edd_add_spacers_to_software_licensing_ui( $content ) {
+
+	if ( empty( $_GET['action'] ) || 'manage_licenses' != $_GET['action'] ) {
+		return $content;
+	}
+
+	if ( empty( $_GET['payment_id'] ) ) {
+		return $content;
+	}
+
+	if ( ! in_the_loop() ) {
+		return $content;
+	}
+
+	return $content . '<div style="height:250px" aria-hidden="true" class="wp-block-spacer"></div>';
+}
+add_filter( 'the_content', 'edd_add_spacers_to_software_licensing_ui', 10, 4 );

@@ -229,7 +229,7 @@ table#used-by-table td {
 	padding: .5em
 }
 .edd-table#edd_sl_license_keys,
-form#edd_sl_license_add_site_form,{
+form#edd_sl_license_add_site_form{
 	margin-bottom: 15em;
 }
 
@@ -287,13 +287,22 @@ tr.edd_cart_item,
 /* Select Payment Method */
 fieldset#edd_payment_mode_select,
 fieldset#edd_checkout_user_info,
-fieldset#edd_cc{
+fieldset#edd_cc,
+fieldset#edd_register_account_fields{
 	border: none;
 	padding: 1em 0 2em;
 }
+fieldset#edd_register_account_fields,
+fieldset#edd_register_fields{
+	border: none;
+}
+fieldset#edd_register_fields{
+	padding: 0;
+}
 fieldset#edd_payment_mode_select legend,
 fieldset#edd_checkout_user_info legend,
-fieldset#edd_cc legend{
+fieldset#edd_cc legend,
+fieldset#edd_register_account_fields legend{
 	font-size: 200%;
 	font-weight: bold;
 }
@@ -301,7 +310,10 @@ fieldset#edd_cc legend{
 #edd-payment-mode-wrap,
 #edd-email-wrap,
 #edd-first-name-wrap,
-#edd-last-name-wrap{
+#edd-last-name-wrap,
+#edd-user-login-wrap,
+#edd-user-pass-wrap,
+#edd-user-pass-confirm-wrap{
 	padding-left: 1em;
 }
 
@@ -465,4 +477,30 @@ a#edd-save-cart-button {
 /* Full width stripe more list item spacing */
 .group-full-width ul li {
 	line-height: 2em;
+}
+
+/* Super list block items like the Divi Setup Guide */
+.wp-block-createwithrani-superlist-item::marker{
+	font-size: 200%;
+}
+.wp-block-createwithrani-superlist-item h2,
+.wp-block-createwithrani-superlist-item h3,
+.wp-block-createwithrani-superlist-item h4{
+	font-weight: bold;
+}
+
+/* Main menu submenus */
+.wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container{
+	border-radius: 5px;
+}
+.wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container li {
+	width: 300px;
+	padding: 0 1em;
+	font-weight: normal;
+}
+.wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container li:first-child{
+	padding-top: 1em;
+}
+.wp-block-navigation:not(.has-background) .wp-block-navigation__submenu-container li:last-child{
+	padding-bottom: 1em;
 }
