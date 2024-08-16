@@ -3,7 +3,7 @@
  *
  * Handles all interactivity on the single function page
  */
-var wporg_developer = ( function( $ ) {
+var wporg_developer = ( function ( $ ) {
 	'use strict';
 
 	var $sourceCollapsedHeight;
@@ -41,26 +41,30 @@ var wporg_developer = ( function( $ ) {
 			var sourceCode = $( '.source-content' ).find( 'table' );
 		}
 
-		if ( !sourceCode.length ) {
+		if ( ! sourceCode.length ) {
 			return;
 		}
 
-		sourceCode.each( function( t ) {
-			if ( ( $sourceCollapsedHeight - 12 ) < $( this ).height() ) {
+		sourceCode.each(
+			function ( t ) {
+				if ( ( $sourceCollapsedHeight - 12 ) < $( this ).height() ) {
 
-				var sourceContent = $( this ).closest( '.source-content' );
+						var sourceContent = $( this ).closest( '.source-content' );
 
-				// Do this with javascript so javascript-less can enjoy the total sourcecode
-				sourceContent.find( '.source-code-container' ).css( {
-					height: $sourceCollapsedHeight + 'px'
-				} );
+						// Do this with javascript so javascript-less can enjoy the total sourcecode
+						sourceContent.find( '.source-code-container' ).css(
+							{
+								height: $sourceCollapsedHeight + 'px'
+							}
+						);
 
-				sourceContent.find( '.source-code-links' ).find( 'span:first' ).show();
-				sourceContent.find( '.show-complete-source' ).show();
-				sourceContent.find( '.show-complete-source' ).off( 'click.togglesource' ).on( 'click.togglesource', toggleCompleteSource );
-				sourceContent.find( '.less-complete-source' ).off( 'click.togglesource' ).on( 'click.togglesource', toggleCompleteSource );
+						sourceContent.find( '.source-code-links' ).find( 'span:first' ).show();
+						sourceContent.find( '.show-complete-source' ).show();
+						sourceContent.find( '.show-complete-source' ).off( 'click.togglesource' ).on( 'click.togglesource', toggleCompleteSource );
+						sourceContent.find( '.less-complete-source' ).off( 'click.togglesource' ).on( 'click.togglesource', toggleCompleteSource );
+				}
 			}
-		} );
+		);
 	}
 
 	function toggleCompleteSource( e ) {
