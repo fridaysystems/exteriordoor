@@ -30,7 +30,7 @@ function exteriordoor_styles() {
  * @return void
  */
 function change_view_on_trac_link( $text ) {
-	return __( 'View on Github', 'cannyon-presser' );
+	return __( 'View on Github', 'exteriordoor' );
 }
 add_filter( 'wp-parser_view_on_trac_link_text', 'change_view_on_trac_link' );
 
