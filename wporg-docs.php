@@ -39,16 +39,6 @@ namespace Devhub{
 	require __DIR__ . '/inc/extras.php';
 
 	/**
-	 * Customizer additions.
-	 */
-	// require __DIR__ . '/inc/customizer.php';
-
-	/**
-	 * Load Jetpack compatibility file.
-	 */
-	// require __DIR__ . '/inc/jetpack.php';
-
-	/**
 	 * Class for editing parsed content on the Function, Class, Hook, and Method screens.
 	 */
 	require_once __DIR__ . '/inc/parsed-content.php';
@@ -65,26 +55,6 @@ namespace Devhub{
 	 * User-submitted content (comments, notes, etc).
 	 */
 	require __DIR__ . '/inc/user-content.php';
-
-	/**
-	 * User-submitted content preview.
-	 */
-	//require __DIR__ . '/inc/user-content-preview.php';
-
-	/**
-	 * Voting for user-submitted content.
-	 */
-	//require __DIR__ . '/inc/user-content-voting.php';
-
-	/**
-	 * Editing for user-submitted content.
-	 */
-	//require __DIR__ . '/inc/user-content-edit.php';
-
-	/**
-	 * CLI commands custom post type and importer.
-	 */
-	//require __DIR__ . '/inc/cli.php';
 
 	/**
 	 * Docs importer.
@@ -124,11 +94,6 @@ namespace Devhub{
 	require __DIR__ . '/inc/formatting.php';
 
 	/**
-	 * Autocomplete.
-	 */
-	//require __DIR__ . '/inc/autocomplete.php';
-
-	/**
 	 * Search query.
 	 */
 	require __DIR__ . '/inc/search.php';
@@ -137,13 +102,6 @@ namespace Devhub{
 	 * Parser customizations.
 	 */
 	require __DIR__ . '/inc/parser.php';
-
-	/**
-	 * CLI commands.
-	 */
-	// if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	// 	require __DIR__ . '/inc/cli-commands.php';
-	// }
 
 	/**
 	 * Admin area customizations.
@@ -399,8 +357,6 @@ namespace Devhub{
 
 	function theme_scripts_styles() {
 		$min = defined( 'WP_DEBUG' ) && WP_DEBUG ? '' : '.min';
-		// wp_enqueue_style( 'dashicons' );
-		// wp_enqueue_style( 'wporg-developer-style', get_stylesheet_uri(), array(), '3' );
 		wp_enqueue_style(
 			'wp-dev-sass-compiled',
 			get_stylesheet_directory_uri() . "/wporg-docs{$min}.css",
