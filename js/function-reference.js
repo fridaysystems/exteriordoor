@@ -73,12 +73,12 @@ var wporg_developer = ( function ( $ ) {
 		var sourceContent = $( this ).closest( '.source-content' );
 
 		if ( $( this ).parent().find( '.show-complete-source' ).is( ':visible' ) ) {
-			var heightGoal = sourceContent.find( 'table' ).height() + 45; // takes into consideration potential x-scrollbar
+			var heightGoal = sourceContent.find( 'table' ).height() + 75; // takes into consideration potential x-scrollbar
 		} else {
 			var heightGoal = $sourceCollapsedHeight;
 		}
 
-		sourceContent.find( '.source-code-container:first' ).animate( { height: heightGoal + 'px', overflow: 'visible' } );
+		sourceContent.find( '.source-code-container:first' ).animate( { height: heightGoal + 'px', overflow: 'visible' } ).toggleClass('expanded');
 
 		$( this ).parent().find( 'a' ).toggle();
 	}
