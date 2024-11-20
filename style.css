@@ -332,6 +332,7 @@ fieldset#edd_register_account_fields legend{
 	--gradient-color-1-hover: rgb(4, 225, 194);
 }
 .edd-add-to-cart.button,
+.edd_errors.edd-gateway-fortis p.edd_error input[type="button"],
 #edd-purchase-button.button,
 button#edd_sl_show_renewal_form,
 #edd_profile_editor_submit,
@@ -356,20 +357,21 @@ button#edd_sl_show_renewal_form,
 	font-size: var(--wp--preset--font-size--medium);
 }
 /* Hover button gradients */
-.edd-add-to-cart.button:hover,
-#edd-purchase-button.button:hover,
-a.edd_cart_remove_item_btn:hover,
-button#edd_sl_show_renewal_form:hover,
-a#edd-save-cart-button:hover,
-#edd_profile_editor_submit:hover,
-#edd_sl_license_add_site_form .button-primary:hover,
-.gform_button.button:hover,
-a.edd_go_to_checkout:hover {
+.edd-add-to-cart.button:hover:enabled,
+.edd_errors.edd-gateway-fortis p.edd_error input[type="button"]:hover:enabled,
+#edd-purchase-button.button:hover:enabled,
+a.edd_cart_remove_item_btn:hover:enabled,
+button#edd_sl_show_renewal_form:hover:enabled,
+a#edd-save-cart-button:hover:enabled,
+#edd_profile_editor_submit:hover:enabled,
+#edd_sl_license_add_site_form .button-primary:hover:enabled,
+.gform_button.button:hover:enabled,
+a.edd_go_to_checkout:hover:enabled {
 	--gradient-color-1: var(--gradient-color-1-hover);
 }
 /* Hover button gradients for most buttons and the search block */
-.wp-block-button__link:hover,
-.wp-block-search__button:hover{
+.wp-block-button__link:hover:enabled,
+.wp-block-search__button:hover:enabled{
 	background: linear-gradient(135deg,var(--gradient-color-1-hover) 0%,var(--gradient-color-2) 100%);
 }
 a.edd_go_to_checkout,
@@ -385,6 +387,16 @@ a#edd-save-cart-button {
 	padding-left: var(--wp--preset--spacing--20);
 	text-decoration: none;
 	font-weight: normal;
+}
+/* Fade disabled buttons */
+.edd-add-to-cart.button:disabled,
+.edd_errors.edd-gateway-fortis p.edd_error input[type="button"]:disabled,
+#edd-purchase-button.button:disabled,
+button#edd_sl_show_renewal_form:disabled,
+#edd_profile_editor_submit:disabled,
+#edd_sl_license_add_site_form .button-primary:disabled,
+.gform_button.button:disabled {
+	opacity: .55;
 }
 
 /* wAppointment */
